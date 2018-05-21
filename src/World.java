@@ -1,0 +1,275 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
+
+public class World extends JFrame
+{
+    //tablica przechowujace informacje o danej kratke
+    int[][] world = new int[60][40];
+    ArrayList<Integer> lockedX = new ArrayList<>();
+    ArrayList<Integer> lockedY = new ArrayList<>();
+
+    ArrayList<Integer> przebyteX = new ArrayList<>();
+    ArrayList<Integer> przebyteY = new ArrayList<>();
+
+    List<Integer> xSorted;
+    List<Integer> ySorted;
+
+    // .png variables
+    private BufferedImage kelner;
+    private BufferedImage kitchen;
+    private BufferedImage table;
+
+    static private int ILOSC_RZECZY = 100;
+
+    Positions poz = new Positions();
+    Node initialNode;
+    //= new Node(0, 39);
+    Node finalNode;
+    //= new Node(51, 5);
+    int rows = 60;
+    int cols = 40;
+    List<Node> path;
+    Node node;
+
+    AStar aStar;
+
+
+    public World() throws InterruptedException
+    {
+        super("SZI");
+        
+        try {
+            kelner = ImageIO.read(new File("resources/waiter.png"));
+            kitchen = ImageIO.read(new File("resources/kitchen.png"));
+            table = ImageIO.read(new File("resources/table.png"));
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        setContentPane(new Init());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1200, 1000);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+        setVisible(true);
+        setResizable(false);
+
+        generateWorld();
+
+        Thread.sleep(1500);
+        go(0, 39);
+    }
+
+    public void go(int x, int y) throws InterruptedException {
+
+
+        ArrayList<Integer> list = new ArrayList<>(zwrocNajblizszaPrzeszkode(x,y));
+        initialNode = new Node(x, y);
+
+        finalNode = new Node(list.get(0), list.get(1));
+        aStar = new AStar(rows, cols, initialNode, finalNode);
+
+        path = aStar.findPath();
+
+        for (int i=0; i<path.size(); i++)
+        {
+            node = path.get(i);
+            Thread.sleep(100);
+            repaint();
+
+            System.out.println("X na: " + node.getRow() + " Y na: " + node.getCol());
+        }
+        
+        lockedX.remove(new Integer(node.getRow()));
+        lockedY.remove(new Integer(node.getCol()));
+
+        poz.setZablokowaneX(lockedX);
+        poz.setZablokowaneY(lockedY);
+
+        go(node.getRow(), node.getCol());
+    }
+
+
+    public void generateWorld()
+    {
+        for (int i = 0; i < 60; i++) 
+        {
+            for (int j = 0; j < 40; j++) 
+            {
+                world[i][j] = 0;
+            }
+        }
+
+        ArrayList<Integer> x = new ArrayList<>();
+        ArrayList<Integer> y = new ArrayList<>();
+        
+        for (int i = 0; i < ILOSC_RZECZY; i++) 
+        {
+            int randomX = ThreadLocalRandom.current().nextInt(2, 54 + 1);
+            int randomY = ThreadLocalRandom.current().nextInt(2, 34 + 1);
+       
+            if (!x.contains(randomX) && !y.contains(randomY))
+            {
+                x.add(randomX);
+                y.add(randomY);
+
+                int random = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+
+                world[randomX][randomY] = random;
+                System.out.println("X: " + randomX + " Y: " + randomY + " -" + " RAN: " + world[randomX][randomY]);
+
+                if (world[randomX][randomY] != 0)
+                {
+                        lockedX.add(randomX);
+                        lockedY.add(randomY);
+                }
+
+            } else {
+                continue;
+            }
+
+        }
+
+        poz.setZablokowaneX(lockedX);
+        poz.setZablokowaneY(lockedY);
+
+        for (int i = 0; i < 60; i++)
+        {
+            for (int j = 0; j < 40; j++)
+            {
+                System.out.println(i + " " + " " + j + " " + world[i][j]);
+            }
+        }
+    }
+
+     class Init extends JPanel
+     {
+        Way way = new Way();
+
+
+        @Override
+        public void paintComponent(Graphics g)
+        {
+            super.paintComponent(g);
+
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect( 0,0,1200, 1000);
+
+            way.draw((Graphics2D) g);
+            g.setColor(Color.BLACK);
+
+            g.setFont(new Font("Courier New", Font.BOLD, 22));
+            g.drawString("KUCHNIA", 15, 50);
+            g.drawImage(kitchen, 15, 50, this);
+            g.setColor(Color.ORANGE);
+
+            for (int i=0; i<przebyteX.size(); i++)
+            {
+                g.fillRect(przebyteX.get(i)*20,przebyteY.get(i)*20,20,20);
+            }
+
+            for (int i=0; i<60; i++)
+            {
+                for (int j=0; j<40; j++)
+                {
+                    if (world[i][j] == 1 )
+                    {
+                        g.setColor(Color.LIGHT_GRAY);
+                        g.fillRect(i*20,j*20,20,20);
+                        g.drawImage(table, i*20, j*20, this);
+                        g.setColor(Color.BLACK);
+                        g.setFont(new Font("Courier New", Font.BOLD, 10));
+                        g.drawString((i+1) + "," + (j+1), i*20  ,j*20);
+                        g.setFont(new Font("Courier New", Font.BOLD, 22));
+
+                    }
+                }
+            }
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(node.getRow()*20,node.getCol()*20,20,20);
+            g.setColor(Color.BLACK);
+            g.drawImage(kelner, node.getRow()*20, node.getCol()*20, this);
+            g.setFont(new Font("Courier New", Font.BOLD, 10));
+            g.drawString((node.getRow()+1) + "," + (node.getCol()+1), node.getRow()*20  ,node.getCol()*20);
+
+            przebyteX.add(node.getRow());
+            przebyteY.add(node.getCol());
+
+            g.setColor(Color.GREEN);
+            g.fillRect(0*20,39*20,20,20);
+            g.fillRect(5*20,3*20,20,20);
+        }
+    }
+
+    public ArrayList<Integer> zwrocNajblizszaPrzeszkode(int waiterX, int waiterY)
+    {
+        ArrayList<Integer> zwracanaLista = new ArrayList<>();
+        zwracanaLista.clear();
+
+        xSorted = new ArrayList<>(poz.getZablokowaneX());
+        ySorted = new ArrayList<>(poz.getZablokowaneY());
+
+        ArrayList<Integer> odleglosciElementow = new ArrayList<>();
+        for (int i=0; i<lockedX.size(); i++)
+        {
+
+                float odleglosc = (float) Math.sqrt(
+                        Math.pow(waiterX - lockedX.get(i), 2) +
+                                Math.pow(waiterY - lockedY.get(i), 2));
+                odleglosciElementow.add((int) odleglosc);
+
+        }
+
+        int minIndex = odleglosciElementow.indexOf(Collections.min(odleglosciElementow));
+
+        int najblizszyOdleglosc = odleglosciElementow.get(minIndex);
+        int pozycjaXNajblizszy = xSorted.get(minIndex);
+        int pozycjaYNajblizszy = ySorted.get(minIndex);
+
+        System.out.println("X: " + pozycjaXNajblizszy + " | Y: " + pozycjaYNajblizszy + " | E: " + najblizszyOdleglosc);
+
+        zwracanaLista.add(0, pozycjaXNajblizszy);
+        zwracanaLista.add(1, pozycjaYNajblizszy);
+        zwracanaLista.add(2, najblizszyOdleglosc);
+
+        return zwracanaLista;
+    }
+
+    public final class Positions
+    {
+        public ArrayList<Integer> listX = new ArrayList<>();
+        public ArrayList<Integer> listY = new ArrayList<>();
+
+        public ArrayList<Integer> getZablokowaneX() {
+            return listX;
+        }
+
+        public void setZablokowaneX(ArrayList<Integer> list) {
+            this.listX = list;
+        }
+
+        public ArrayList<Integer> getZablokowaneY() {
+            return listY;
+        }
+
+        public void setZablokowaneY(ArrayList<Integer> list) {
+            this.listY = list;
+        }
+    }
+
+    public static void main(String args[]) throws InterruptedException
+    {
+        new World();
+    }
+}
