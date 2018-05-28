@@ -27,13 +27,16 @@ public class World extends JFrame
     private BufferedImage kitchen;
     private BufferedImage table;
 
-    static private int ILOSC_RZECZY = 100;
+    int screenHeight;
+    int screenWidth;
+
+    JPanel leftPanel, northPanel;
+
+    static private int ILOSC_RZECZY = 15;
 
     Positions poz = new Positions();
     Node initialNode;
-    //= new Node(0, 39);
     Node finalNode;
-    //= new Node(51, 5);
     int rows = 60;
     int cols = 40;
     List<Node> path;
@@ -56,8 +59,11 @@ public class World extends JFrame
         }
 
         setContentPane(new Init());
+        calculateScreenSize();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 1000);
+        setLayout(new BorderLayout());
+        setBackground(Color.white);
+        //setSize(1200, 1000);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         setVisible(true);
@@ -75,27 +81,28 @@ public class World extends JFrame
         ArrayList<Integer> list = new ArrayList<>(zwrocNajblizszaPrzeszkode(x,y));
         initialNode = new Node(x, y);
 
-        finalNode = new Node(list.get(0), list.get(1));
-        aStar = new AStar(rows, cols, initialNode, finalNode);
+            finalNode = new Node(list.get(0), list.get(1));
+            aStar = new AStar(rows, cols, initialNode, finalNode);
 
-        path = aStar.findPath();
+            path = aStar.findPath();
 
-        for (int i=0; i<path.size(); i++)
-        {
-            node = path.get(i);
-            Thread.sleep(100);
-            repaint();
+            for (int i=0; i<path.size(); i++)
+            {
+                node = path.get(i);
+                Thread.sleep(100);
+                repaint();
 
-            System.out.println("X na: " + node.getRow() + " Y na: " + node.getCol());
-        }
-        
-        lockedX.remove(new Integer(node.getRow()));
-        lockedY.remove(new Integer(node.getCol()));
+                System.out.println("X na: " + node.getRow() + " Y na: " + node.getCol());
+            }
 
-        poz.setZablokowaneX(lockedX);
-        poz.setZablokowaneY(lockedY);
+            lockedX.remove(new Integer(node.getRow()));
+            lockedY.remove(new Integer(node.getCol()));
 
-        go(node.getRow(), node.getCol());
+            poz.setZablokowaneX(lockedX);
+            poz.setZablokowaneY(lockedY);
+
+            go(node.getRow(), node.getCol());
+
     }
 
 
@@ -111,8 +118,46 @@ public class World extends JFrame
 
         ArrayList<Integer> x = new ArrayList<>();
         ArrayList<Integer> y = new ArrayList<>();
-        
-        for (int i = 0; i < ILOSC_RZECZY; i++) 
+
+        world[10][5] = 1;
+        world[11][15] = 1;
+        world[12][25] = 1;
+        world[13][35] = 1;
+        world[30][6] = 1;
+        world[31][16] = 1;
+        world[32][26] = 1;
+
+        lockedX.add(10);
+        lockedX.add(11);
+        lockedX.add(12);
+        lockedX.add(13);
+        lockedX.add(30);
+        lockedX.add(31);
+        lockedX.add(32);
+        lockedY.add(5);
+        lockedY.add(15);
+        lockedY.add(25);
+        lockedY.add(35);
+        lockedY.add(6);
+        lockedY.add(16);
+        lockedY.add(26);
+
+        x.add(10);
+        x.add(11);
+        x.add(12);
+        x.add(13);
+        x.add(30);
+        x.add(31);
+        x.add(32);
+        y.add(5);
+        y.add(15);
+        y.add(25);
+        y.add(35);
+        y.add(6);
+        y.add(16);
+        y.add(26);
+
+        /*for (int i = 0; i < ILOSC_RZECZY; i++)
         {
             int randomX = ThreadLocalRandom.current().nextInt(2, 54 + 1);
             int randomY = ThreadLocalRandom.current().nextInt(2, 34 + 1);
@@ -136,8 +181,7 @@ public class World extends JFrame
             } else {
                 continue;
             }
-
-        }
+        }*/
 
         poz.setZablokowaneX(lockedX);
         poz.setZablokowaneY(lockedY);
@@ -161,12 +205,10 @@ public class World extends JFrame
         {
             super.paintComponent(g);
 
-
             g.setColor(Color.LIGHT_GRAY);
             g.fillRect( 0,0,1200, 1000);
 
-            way.draw((Graphics2D) g);
-            g.setColor(Color.BLACK);
+
 
             g.setFont(new Font("Courier New", Font.BOLD, 22));
             g.drawString("KUCHNIA", 15, 50);
@@ -182,6 +224,20 @@ public class World extends JFrame
             {
                 for (int j=0; j<40; j++)
                 {
+                    //drawing kitchen fields
+                    if(i < 20 && j < 5)
+                    {
+                        g.setColor(Color.RED);
+                        g.fillRect(i*20,j*20,20,20);
+                    }
+
+                    //drawing bar fields
+                    if(i >= 20 && i < 40 && j < 5)
+                    {
+                        g.setColor(Color.CYAN);
+                        g.fillRect(i*20,j*20,20,20);
+                    }
+
                     if (world[i][j] == 1 )
                     {
                         g.setColor(Color.LIGHT_GRAY);
@@ -195,6 +251,9 @@ public class World extends JFrame
                     }
                 }
             }
+
+            way.draw((Graphics2D) g);
+            g.setColor(Color.BLACK);
 
             g.setColor(Color.LIGHT_GRAY);
             g.fillRect(node.getRow()*20,node.getCol()*20,20,20);
@@ -231,17 +290,20 @@ public class World extends JFrame
 
         }
 
-        int minIndex = odleglosciElementow.indexOf(Collections.min(odleglosciElementow));
+        if(!odleglosciElementow.isEmpty())
+        {
+            int minIndex = odleglosciElementow.indexOf(Collections.min(odleglosciElementow));
 
-        int najblizszyOdleglosc = odleglosciElementow.get(minIndex);
-        int pozycjaXNajblizszy = xSorted.get(minIndex);
-        int pozycjaYNajblizszy = ySorted.get(minIndex);
+            int najblizszyOdleglosc = odleglosciElementow.get(minIndex);
+            int pozycjaXNajblizszy = xSorted.get(minIndex);
+            int pozycjaYNajblizszy = ySorted.get(minIndex);
 
-        System.out.println("X: " + pozycjaXNajblizszy + " | Y: " + pozycjaYNajblizszy + " | E: " + najblizszyOdleglosc);
+            System.out.println("X: " + pozycjaXNajblizszy + " | Y: " + pozycjaYNajblizszy + " | E: " + najblizszyOdleglosc);
 
-        zwracanaLista.add(0, pozycjaXNajblizszy);
-        zwracanaLista.add(1, pozycjaYNajblizszy);
-        zwracanaLista.add(2, najblizszyOdleglosc);
+            zwracanaLista.add(0, pozycjaXNajblizszy);
+            zwracanaLista.add(1, pozycjaYNajblizszy);
+            zwracanaLista.add(2, najblizszyOdleglosc);
+        }
 
         return zwracanaLista;
     }
@@ -268,8 +330,26 @@ public class World extends JFrame
         }
     }
 
-    public static void main(String args[]) throws InterruptedException
-    {
-        new World();
+    public void calculateScreenSize() {
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        screenHeight = screen.height;
+        screenWidth = screen.width;
+
+        if (screenHeight / 9 == screenWidth / 16) {
+            System.out.println("Proporcje sie zgadzaja");
+            setSize(screenWidth, screenHeight);
+        }
+        else {
+            int p = screenWidth / 16;
+            if ( p*9 <= screenHeight )
+            {
+                System.out.println("Proporcje sie nie zgadzaja, ale jest ok");
+                screenHeight = p * 9;
+            }
+            else {
+                System.out.println("Rozdzielczosc nieprawidlowa!");
+            }
+
+        }
     }
 }
