@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="SmieciarkaJava:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/SmieciarkaJava_jar</output-path>
-    <root id="archive" name="SmieciarkaJava.jar">
-      <element id="module-output" name="WaiterJava" />
-    </root>
-  </artifact>
-</component>

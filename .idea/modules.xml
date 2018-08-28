@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WaiterJava.iml" filepath="$PROJECT_DIR$/WaiterJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/deploy.iml" filepath="$PROJECT_DIR$/deploy.iml" />
     </modules>
   </component>
 </project>
