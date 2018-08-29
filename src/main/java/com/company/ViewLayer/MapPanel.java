@@ -1,5 +1,9 @@
 package com.company.ViewLayer;
 
+import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
+import com.company.LogicLayer.GeneticAlgorithm.Population;
+import com.company.LogicLayer.GeneticAlgorithm.Tour;
+import com.company.LogicLayer.GeneticAlgorithm.TourManager;
 import com.company.LogicLayer.Table;
 
 import javax.imageio.ImageIO;
@@ -12,7 +16,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MapPanel extends JPanel {
-
 
     int screenWidth, screenHeight;
     int szerokoscPola;
@@ -73,6 +76,7 @@ public class MapPanel extends JPanel {
 
         setPreferredSize(new Dimension(screenWidth, screenHeight));
 
+
         try {
 
             bgImage = ImageIO.read(new File("resources/bg.png"));
@@ -108,6 +112,31 @@ public class MapPanel extends JPanel {
         }
 
         tables = calculateTables(numberOfTables);
+
+        Population population = new Population(50, true);
+        System.out.println("Initial distance: "+ population.getFittest().getDistance());
+
+        population = GeneticAlgorithm.evolvePopulation(population);
+        for (int i = 0; i < 100; i++) {
+            population = GeneticAlgorithm.evolvePopulation(population);
+        }
+
+        System.out.println("Finished");
+        System.out.println("Final distance: " + population.getFittest().getDistance());
+        System.out.println("Solution:");
+        System.out.println(population.getFittest());
+
+        Tour tour = population.getFittest();
+
+        Table table;
+
+        for(int i=0; i < tour.tourSize(); i++)
+        {
+            table = tour.getTable(i);
+          System.out.print(" => " + table.getTableNumber());
+
+        }
+
         //  this.setLayout(null);
 
         // there should be generated map number between 1 and 3
@@ -121,7 +150,6 @@ public class MapPanel extends JPanel {
     //TODO poprawić generwoanie stolików
     private ArrayList<Table> calculateTables(int numberOfTables) {
 
-
         System.out.println(numberOfTables);
         ArrayList coordinatesOfTables = new ArrayList<Table>();
         int xPos = 30;
@@ -129,16 +157,17 @@ public class MapPanel extends JPanel {
         for (int i = 0; i <= numberOfTables; i++) {
             int numberOfPeople = ThreadLocalRandom.current().nextInt(0, 4 + 1);
 
-            System.out.println("num of ppl " + numberOfPeople);
             if (xPos < 880) {
                 Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 1);
                 coordinatesOfTables.add(table);
+                TourManager.addTable(table);
                 xPos += 200;
             } else {
                 xPos = 30;
                 yPos += 220;
                 Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 1);
                 coordinatesOfTables.add(table);
+                TourManager.addTable(table);
                 xPos += 200;
             }
         }
@@ -158,7 +187,7 @@ public class MapPanel extends JPanel {
         super.paintComponent(g);
         g.drawImage(bgImage, 0, 0, null);
 
-        //drawNet(g);
+        drawNet(g);
         drawTables(g);
 //        Move move = null;
 //
@@ -202,14 +231,12 @@ public class MapPanel extends JPanel {
         int tableY;
         int randomAvatar;
 
-        System.out.println(numberOfTables);
-
         for (int i = 0; i < numberOfTables; i++) {
             int amountOfAvatars = avatars.size();
 
             numberOfPeople = tables.get(i).getNumberOfPeople();
-            tableX = tables.get(i).getTableXpos();
-            tableY = tables.get(i).getTableYpos();
+            tableX = tables.get(i).getX();
+            tableY = tables.get(i).getY();
             g.drawImage(tableImage, tableX, tableY, this);
 
             /*
@@ -235,7 +262,6 @@ public class MapPanel extends JPanel {
             OSOBA 4: tableX + 90, tableY +30
              */
 
-            System.out.println(ThreadLocalRandom.current().nextInt(0, amountOfAvatars));
 
             //TODO mozna poprawic zeby generowanie ludzi nie zawsze zaczynalo sie od pierwszego miejsca i zeby zajmowali losowe miejsca
             if (numberOfPeople > 0) {

@@ -6,8 +6,6 @@ public class Table {
     private int xPos;
     private int yPos;
     private int status;
-
-
     private int numberOfPeople;
 
     public Table(Integer table_number, int xPos, int yPos, int numberOfPeople, int status){
@@ -19,11 +17,23 @@ public class Table {
     }
 
     public Integer getTableNumber() { return table_number;}
-    public void setTable_number(Integer table_number) { this.table_number = table_number; }
 
-    public int getTableXpos() {return xPos;}
+    public int getX() {return xPos;}
 
-    public int getTableYpos() { return yPos; }
+    public int getY() { return yPos; }
 
     public int getNumberOfPeople() { return numberOfPeople; }
+
+    public double distanceTo(Table table) {
+        int xDistance = Math.abs(getX() - table.getX());
+        int yDistance = Math.abs(getY() - table.getY());
+        double distance = Math.sqrt( (xDistance*xDistance) + (yDistance*yDistance) );
+
+        return distance;
+    }
+
+    @Override
+    public String toString(){
+        return getX()+", "+getY();
+    }
 }
