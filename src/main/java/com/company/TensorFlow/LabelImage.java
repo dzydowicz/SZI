@@ -34,18 +34,29 @@ public class LabelImage {
         s.println("<image file> is the path to a JPEG image file");
     }
 
-    public static void main(String[] args) {
-        if (args.length != 2) {
-            printUsage(System.err);
-            System.exit(1);
-        }
-        String modelDir = args[0];
-        String imageFile = args[1];
+    public static String labelImage(String filePath)
+    {
+        byte[] graphDef = readAllBytesOrExit(Paths.get("resources/neural_network/digits/output_graph.pb"));
+        List<String> labels = readAllLinesOrExit(Paths.get("resources/neural_network/digits/output_labels.txt"));
+        byte[] imageBytes = readAllBytesOrExit(Paths.get(filePath)); //f.e. resources/numbers/one.png
 
-        byte[] graphDef = readAllBytesOrExit(Paths.get(modelDir, "tensorflow_inception_graph.pb"));
+        try (Tensor<Float> image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
+            float[] labelProbabilities = executeInceptionGraph(graphDef, image);
+            int bestLabelIdx = maxIndex(labelProbabilities);
+            System.out.println(
+                    String.format("BEST MATCH: %s (%.2f%% likely)",
+                            labels.get(bestLabelIdx),
+                            labelProbabilities[bestLabelIdx] * 100f));
+
+            return labels.get(bestLabelIdx);
+        }
+    }
+
+    /*public static void main(String[] args) {
+        byte[] graphDef = readAllBytesOrExit(Paths.get("resources/neural_network/digits/output_graph.pb"));
         List<String> labels =
-                readAllLinesOrExit(Paths.get(modelDir, "imagenet_comp_graph_label_strings.txt"));
-        byte[] imageBytes = readAllBytesOrExit(Paths.get(imageFile));
+                readAllLinesOrExit(Paths.get("resources/neural_network/digits/output_labels.txt"));
+        byte[] imageBytes = readAllBytesOrExit(Paths.get("resources/numbers/one.png"));
 
         try (Tensor<Float> image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
             float[] labelProbabilities = executeInceptionGraph(graphDef, image);
@@ -55,7 +66,7 @@ public class LabelImage {
                             labels.get(bestLabelIdx),
                             labelProbabilities[bestLabelIdx] * 100f));
         }
-    }
+    }*/
 
     private static Tensor<Float> constructAndExecuteGraphToNormalizeImage(byte[] imageBytes) {
         try (Graph g = new Graph()) {
@@ -66,15 +77,15 @@ public class LabelImage {
             // - The model was trained with images scaled to 224x224 pixels.
             // - The colors, represented as R, G, B in 1-byte each were converted to
             //   float using (value - Mean)/Scale.
-            final int H = 224;
-            final int W = 224;
-            final float mean = 117f;
-            final float scale = 1f;
+            final int H = 299;
+            final int W = 299;
+            final float mean = 17f;
+            final float scale = 811;
 
             // Since the graph is being constructed once per execution here, we can use a constant for the
             // input image. If the graph were to be re-used for multiple input images, a placeholder would
             // have been more appropriate.
-            final Output<String> input = b.constant("input", imageBytes);
+            final Output<String> input = b.constant("Placeholder", imageBytes);
             final Output<Float> output =
                     b.div(
                             b.sub(
@@ -98,7 +109,7 @@ public class LabelImage {
             try (Session s = new Session(g);
                  // Generally, there may be multiple output tensors, all of them must be closed to prevent resource leaks.
                  Tensor<Float> result =
-                         s.runner().feed("input", image).fetch("output").run().get(0).expect(Float.class)) {
+                         s.runner().feed("Placeholder", image).fetch("final_result").run().get(0).expect(Float.class)) {
                 final long[] rshape = result.shape();
                 if (result.numDimensions() != 2 || rshape[0] != 1) {
                     throw new RuntimeException(
