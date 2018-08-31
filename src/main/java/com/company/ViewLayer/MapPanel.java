@@ -1,10 +1,12 @@
 package com.company.ViewLayer;
 
+import com.company.LogicLayer.Coordinates;
 import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
 import com.company.LogicLayer.GeneticAlgorithm.Population;
 import com.company.LogicLayer.GeneticAlgorithm.Tour;
 import com.company.LogicLayer.GeneticAlgorithm.TourManager;
 import com.company.LogicLayer.Table;
+import com.company.TensorFlow.LabelImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -44,8 +46,10 @@ public class MapPanel extends JPanel {
 
     BufferedImage avatar1, avatar2, avatar3, avatar4, avatar5, avatar6, avatar7, avatar8, avatar9, avatar10;
     BufferedImage greenBulb, yellowBulb, redBulb;
-    BufferedImage one, two, three;
+    BufferedImage one, two, three, four, five;
 
+
+    public Boolean alreadyDrawed = false;
 
     int[][] map = new int[30][25];
     //int randomMap = new Random().nextInt(3) + 1;
@@ -55,9 +59,17 @@ public class MapPanel extends JPanel {
     //    int numberOfTables = ThreadLocalRandom.current().nextInt(4, 7 + 1);
     int numberOfTables = 10;
     ArrayList<Table> tables;
-    ArrayList<BufferedImage> avatars = new ArrayList<BufferedImage>();
+    ArrayList<Coordinates> chairs = new ArrayList<>();
+    //ArrayList<BufferedImage> avatars = new ArrayList<>();
+    ArrayList<BufferedImage> numbers = new ArrayList<>();
 
-    public MapPanel(int screenWidth, int screenHeight) {
+
+    public MapPanel(int screenWidth, int screenHeight) throws IOException {
+
+        chairs.add(new Coordinates(20,-15));
+        chairs.add(new Coordinates(90,-15));
+        chairs.add(new Coordinates(20,30));
+        chairs.add(new Coordinates(90,30));
 
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
@@ -80,7 +92,7 @@ public class MapPanel extends JPanel {
         try {
 
             bgImage = ImageIO.read(new File("resources/bg.png"));
-            waiter = ImageIO.read(new File("resources/waiter.png"));
+            waiter = ImageIO.read(new File("resources/alpha.png"));
             waiterFoodImage = ImageIO.read(new File("resources/waiterFood.png"));
             waiterWineImage = ImageIO.read(new File("resources/waiterWine.png"));
 
@@ -89,22 +101,20 @@ public class MapPanel extends JPanel {
             wineImage = ImageIO.read(new File(WINE_PATH));
             foodImage = ImageIO.read(new File(FOOD_PATH));
 
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar1.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar2.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar3.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar4.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar5.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar6.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar7.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar8.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar9.png")));
-            avatars.add(ImageIO.read(new File("resources/avatars/avatar10.png")));
-
             yellowBulb = ImageIO.read(new File("resources/bulb/yellow.png"));
             redBulb = ImageIO.read(new File("resources/bulb/red.png"));
             greenBulb = ImageIO.read(new File("resources/bulb/green.png"));
 
-            one = ImageIO.read(new File("resources/numbers/one.png"));
+            numbers.add(ImageIO.read(new File("resources/numbers/one.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/two.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/three.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/four.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/five.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/six.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/seven.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/eight.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/nine.png")));
+            numbers.add(ImageIO.read(new File("resources/numbers/ten.png")));
 
 
         } catch (IOException e) {
@@ -114,7 +124,7 @@ public class MapPanel extends JPanel {
         tables = calculateTables(numberOfTables);
 
         Population population = new Population(50, true);
-        System.out.println("Initial distance: "+ population.getFittest().getDistance());
+        System.out.println("Initial distance: " + population.getFittest().getDistance());
 
         population = GeneticAlgorithm.evolvePopulation(population);
         for (int i = 0; i < 100; i++) {
@@ -130,12 +140,15 @@ public class MapPanel extends JPanel {
 
         Table table;
 
-        for(int i=0; i < tour.tourSize(); i++)
-        {
+        for (int i = 0; i < tour.tourSize(); i++) {
             table = tour.getTable(i);
-          System.out.print(" => " + table.getTableNumber());
+            System.out.print(" => " + table.getTableNumber());
 
         }
+        System.out.println();
+
+        LabelImage labelImage = new LabelImage();
+        //    String result = labelImage.labelFood("resources/food_images/pizza/one.jpg");
 
         //  this.setLayout(null);
 
@@ -148,7 +161,7 @@ public class MapPanel extends JPanel {
     }
 
     //TODO poprawić generwoanie stolików
-    private ArrayList<Table> calculateTables(int numberOfTables) {
+    private ArrayList<Table> calculateTables(int numberOfTables) throws IOException {
 
         System.out.println(numberOfTables);
         ArrayList coordinatesOfTables = new ArrayList<Table>();
@@ -185,11 +198,13 @@ public class MapPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(bgImage, 0, 0, null);
 
-        drawNet(g);
-        drawTables(g);
-//        Move move = null;
+            g.drawImage(bgImage, 0, 0, null);
+            drawNet(g);
+            drawTables(g);
+
+        drawWaiter(g);
+        //Move move = null;
 //
 //        g.setColor(Color.WHITE);
 //        g.fillRect(waiterXpos, waiterYpos, 40, 40);
@@ -206,6 +221,11 @@ public class MapPanel extends JPanel {
 //            g.drawImage(waiter, waiterXpos - 40, waiterYpos - 40, this);
 //        }
 //        revalidate();
+
+    }
+
+    private void drawWaiter(Graphics g) {
+        g.drawImage(waiter, waiterXpos, waiterYpos, this);
 
     }
 
@@ -232,7 +252,7 @@ public class MapPanel extends JPanel {
         int randomAvatar;
 
         for (int i = 0; i < numberOfTables; i++) {
-            int amountOfAvatars = avatars.size();
+//            int amountOfAvatars = avatars.size();
 
             numberOfPeople = tables.get(i).getNumberOfPeople();
             tableX = tables.get(i).getX();
@@ -261,45 +281,54 @@ public class MapPanel extends JPanel {
             OSOBA 3: tableX + 20, tableY + 30
             OSOBA 4: tableX + 90, tableY +30
              */
+//            if (tables.get(i).getAvatars().size() > 0) {
+//
+//                for(int j = 0; j < tables.get(i).getAvatars().size(); j++){
+//                    System.out.println(tables.get(j).getAvatars().size());
+//                    BufferedImage bufferedImage = tables.get(i).getAvatars().get(j);
+//                    System.out.println("to je i: "+ j);
+//                    g.drawImage(tables.get(i).getAvatars().get(j), tableX+chairs.get(j).getX(), tableY+chairs.get(j).getY(), this);
+//                }
+//
+//            }
 
+            if(tables.get(i).getNumberOfPeople() > 0) {
 
-            //TODO mozna poprawic zeby generowanie ludzi nie zawsze zaczynalo sie od pierwszego miejsca i zeby zajmowali losowe miejsca
-            if (numberOfPeople > 0) {
-                g.drawImage(yellowBulb, tableX + 55, tableY - 10, this);
-                //OSOBA1
-                g.drawImage(avatars.get(ThreadLocalRandom.current().nextInt(0, amountOfAvatars)), tableX + 20, tableY - 15, this);
-                if (numberOfPeople > 1) {
-                    //OSOBA2
-                    g.drawImage(avatars.get(ThreadLocalRandom.current().nextInt(0, amountOfAvatars)), tableX + 90, tableY - 15, this);
-                    if (numberOfPeople > 2) {
-                        //OSOBA3
-                        g.drawImage(avatars.get(ThreadLocalRandom.current().nextInt(0, amountOfAvatars)), tableX + 20, tableY + 30, this);
-                        if (numberOfPeople > 3) {
-                            //OSOBA4
-                            g.drawImage(avatars.get(ThreadLocalRandom.current().nextInt(0, amountOfAvatars)), tableX + 90, tableY + 30, this);
-                        }
-                    }
+                for(int j = 0 ; j < tables.get(i).getNumberOfPeople(); j++) {
+
+                    g.drawImage(tables.get(i).getAvatars().get(j), tableX+chairs.get(j).getX(), tableY+chairs.get(j).getY(), this);
                 }
-            } else {
+                g.drawImage(yellowBulb, tableX + 55, tableY - 10, this);
 
             }
 
-            //g.drawImage(one, tableX+75, tableY+55, this);
+            g.drawImage(numbers.get(i), tableX + 75, tableY + 55, this);
 
             g.setColor(Color.WHITE);
             g.setFont(new Font("Helvetica", Font.BOLD, 12));
+
 
             g.drawString("Table ID: " + tables.get(i).getTableNumber() + " | X,Y: " + (tableX) + "," + (tableY), tableX, tableY - 40);
 
             //todo poprawic kolory numerkow, cos wymyslic madrego na stoliki
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Helvetica", Font.BOLD, 20));
-            g.drawString("" + (tables.get(i).getTableNumber() + 1), tableX + 70, tableY + 75);
-
-            g.setFont(new Font("Helvetica", Font.BOLD, 12));
-            g.drawString("Number of people: " + tables.get(i).getNumberOfPeople(), tableX, tableY - 20);
+//            g.setColor(Color.WHITE);
+//            g.setFont(new Font("Helvetica", Font.BOLD, 20));
+//            //g.drawString("" + (tables.get(i).getTableNumber() + 1), tableX + 70, tableY + 75);
+//
+//            g.setFont(new Font("Helvetica", Font.BOLD, 12));
+//            g.drawString("Number of people: " + tables.get(i).getNumberOfPeople(), tableX, tableY - 20);
 
         }
 
     }
+
+    public void setWaiterXpos(int xPos) {
+        this.waiterXpos = xPos;
+    }
+
+    public void setWaiterYpos(int yPos) {
+        this.waiterYpos = yPos;
+    }
+
+
 }

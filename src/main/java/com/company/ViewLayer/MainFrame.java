@@ -2,6 +2,7 @@ package com.company.ViewLayer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.time.LocalTime;
 
 public class MainFrame extends JFrame {
@@ -13,9 +14,9 @@ public class MainFrame extends JFrame {
     int screenWidth = 1024;
     int screenHeight = 768;
 
-    JPanel leftPanel, rightPanel, northPanel, newOrdersPanel;
+    JPanel leftPanel, rightPanel, northPanel, newOrdersPanel, dashboardPanel;
 
-    public static MainFrame getInstance() {
+    public static MainFrame getInstance() throws IOException {
         if (instance == null) {
             return new MainFrame();
         } else {
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public MainFrame() {
+    public MainFrame() throws IOException {
         //title
         super("SZI");
 
@@ -46,11 +47,21 @@ public class MainFrame extends JFrame {
         this.add(leftPanel, BorderLayout.WEST);
 
         //utworzenie panelu z zamowieniami
-        String [][] orderList = {{"", ""}};
-        newOrdersPanel = new OrdersPanel(orderList, "Zamowienia:", screenWidth, screenHeight);
-        newOrdersPanel.setPreferredSize(new Dimension(380, 768));
-        leftPanel.add(newOrdersPanel);
+//        String [][] orderList = {{"", ""}};
+//        newOrdersPanel = new OrdersPanel(orderList, "Zamowienia:", screenWidth, screenHeight);
+//        newOrdersPanel.setPreferredSize(new Dimension(380, 768));
+
+        try {
+            dashboardPanel = new DashboardPanel();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        leftPanel.add(dashboardPanel);
 
         pack();
     }
+
+
+    public MapPanel getMapPanel(){return mapPanel;}
 }

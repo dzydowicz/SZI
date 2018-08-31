@@ -18,10 +18,10 @@ import org.tensorflow.types.UInt8;
 
 /** Sample use of the TensorFlow Java API to label images using a pre-trained model. */
 public class LabelImage {
-    public static String labelImage(String filePath)
+    public static String labelDigit(String filePath)
     {
-        byte[] graphDef = readAllBytesOrExit(Paths.get("resources/neural_network/digits/output_graph.pb"));
-        List<String> labels = readAllLinesOrExit(Paths.get("resources/neural_network/digits/output_labels.txt"));
+        byte[] graphDef = readAllBytesOrExit(Paths.get("resources/neural_network/digits/digits_graph.pb"));
+        List<String> labels = readAllLinesOrExit(Paths.get("resources/neural_network/digits/digits_labels.txt"));
         byte[] imageBytes = readAllBytesOrExit(Paths.get(filePath)); //f.e. resources/numbers/one.png
 
         try (Tensor<Float> image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
@@ -36,10 +36,29 @@ public class LabelImage {
         }
     }
 
+    public static String labelFood(String filePath)
+    {
+        byte[] graphDef = readAllBytesOrExit(Paths.get("resources/neural_network/food/food_graph.pb"));
+        List<String> labels = readAllLinesOrExit(Paths.get("resources/neural_network/food/food_labels.txt"));
+        byte[] imageBytes = readAllBytesOrExit(Paths.get(filePath)); //f.e. resources/numbers/one.png
+
+        try (Tensor<Float> image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
+            float[] labelProbabilities = executeInceptionGraph(graphDef, image);
+            int bestLabelIdx = maxIndex(labelProbabilities);
+            System.out.println(
+                    String.format("BEST MATCH: %s (%.2f%% likely)",
+                            labels.get(bestLabelIdx),
+                            labelProbabilities[bestLabelIdx] * 100f));
+//            System.out.println("lols"+labels.get(bestLabelIdx));
+
+            return labels.get(bestLabelIdx);
+        }
+    }
+
     /*public static void main(String[] args) {
-        byte[] graphDef = readAllBytesOrExit(Paths.get("resources/neural_network/digits/output_graph.pb"));
+        byte[] graphDef = readAllBytesOrExit(Paths.get("resources/neural_network/digits/digits_graph.pb"));
         List<String> labels =
-                readAllLinesOrExit(Paths.get("resources/neural_network/digits/output_labels.txt"));
+                readAllLinesOrExit(Paths.get("resources/neural_network/digits/digits_labels.txt"));
         byte[] imageBytes = readAllBytesOrExit(Paths.get("resources/numbers/one.png"));
 
         try (Tensor<Float> image = constructAndExecuteGraphToNormalizeImage(imageBytes)) {
