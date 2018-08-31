@@ -1,4 +1,4 @@
-package com.company.LogicLayer;
+package com.company.LogicLayer.AStar;
 
 public class Node {
 
@@ -49,10 +49,8 @@ public class Node {
 
     @Override
     public String toString() {
-        return "LogicLayer.Node [row=" + row + ", col=" + col + "]";
+        return "Node [row=" + row + ", col=" + col + "]";
     }
-
-
 
     public int getH() {
         return h;

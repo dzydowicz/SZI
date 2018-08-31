@@ -1,228 +1,250 @@
 package com.company.LogicLayer.AStar;
 
+import com.company.LogicLayer.Coordinates;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.locks.Lock;
 
 public class AStar {
-//    public static final int DIAGONAL_COST = 14;
-//    public static final int V_H_COST = 10;
-//
-//
-//
-//    //Blocked Nodes are just null LogicLayer.Node values in grid
-//    static Node [][] grid = new Node[5][5];
-//
-//    static PriorityQueue<Node> open;
-//
-//    static boolean closed[][];
-//    static int startI, startJ;
-//    static int endI, endJ;
-//
-//    public static void setBlocked(int i, int j){
-//        grid[i][j] = null;
-//    }
-//
-//    public static void setStartNode(int i, int j){
-//        startI = i;
-//        startJ = j;
-//    }
-//
-//    public static void setEndNode(int i, int j){
-//        endI = i;
-//        endJ = j;
-//    }
-//
-//    static void checkAndUpdateCost(Node current, Node t, int cost){
-//        if(t == null || closed[t.i][t.j])return;
-//        int t_final_cost = t.heuristicCost+cost;
-//
-//        boolean inOpen = open.contains(t);
-//        if(!inOpen || t_final_cost<t.finalCost){
-//            t.finalCost = t_final_cost;
-//            t.parent = current;
-//            if(!inOpen)open.add(t);
+    private static int DEFAULT_HV_COST = 10; // Horizontal - Vertical Cost
+    private static int DEFAULT_DIAGONAL_COST = 14;
+    private static final int ROWS = 1024;
+    private static final int COLS = 768;
+
+    private int hvCost;
+    private int diagonalCost;
+    private Node[][] searchArea = new Node[ROWS][COLS];
+    private PriorityQueue<Node> openList;
+    private List<Node> closedList;
+    private Node initialNode;
+    private Node finalNode;
+
+    public AStar(Node initialNode, Node finalNode, int hvCost, int diagonalCost, List<LockedArea> lockedAreas) {
+        this.hvCost = hvCost;
+        this.diagonalCost = diagonalCost;
+        setInitialNode(initialNode);
+        setFinalNode(finalNode);
+        setLockedAreas(lockedAreas);
+        this.openList = new PriorityQueue<Node>(new Comparator<Node>() {
+            @Override
+            public int compare(Node node0, Node node1) {
+                return node0.getF() < node1.getF() ? -1 : node0.getF() > node1.getF() ? 1 : 0;
+            }
+        });
+        setNodes();
+        this.closedList = new ArrayList<Node>();
+    }
+
+    public AStar(Node initialNode, Node finalNode, List<LockedArea> lockedAreas) {
+        this(initialNode, finalNode, DEFAULT_HV_COST, DEFAULT_DIAGONAL_COST, lockedAreas);
+    }
+
+    public static List<Node> findPath(Coordinates start, Coordinates end, List<LockedArea> lockedAreas)
+    {
+        return findPath(start.getX(), start.getY(), end.getX(), end.getY(), lockedAreas);
+    }
+
+    public static List<Node> findPath(int startX, int startY, int endX, int endY, List<LockedArea> lockedAreas)
+    {
+        Node initialNode = new Node(startX, startY);
+        Node finalNode = new Node(endX, endY);
+
+        AStar aStar = new AStar(initialNode, finalNode, DEFAULT_HV_COST, DEFAULT_DIAGONAL_COST, lockedAreas);
+
+        return aStar.findPath();
+    }
+
+    private void setLockedAreas(List<LockedArea> lockedAreas)
+    {
+        for (LockedArea lockedArea : lockedAreas)
+        {
+            for(int i = lockedArea.getStartX(); i <= lockedArea.getEndX(); i++)
+            {
+                for(int j = lockedArea.getStartY(); j <= lockedArea.getEndY(); j++)
+                {
+                    setBlock(i, j);
+                }
+            }
+        }
+    }
+    
+    private void setNodes() {
+        for (int i = 0; i < searchArea.length; i++) {
+            for (int j = 0; j < searchArea[0].length; j++) {
+                Node node = new Node(i, j);
+                node.calculateHeuristic(getFinalNode());
+                this.searchArea[i][j] = node;
+            }
+        }
+    }
+
+//    public void setBlocks(int[][] blocksArray) {
+//        for (int i = 0; i < blocksArray.length; i++) {
+//            int row = blocksArray[i][0];
+//            int col = blocksArray[i][1];
+//            setBlock(row, col);
 //        }
 //    }
-//
-//    public static void AStar(){
-//
-//        //add the start location to open list.
-//        open.add(grid[startI][startJ]);
-//
-//        Node current;
-//
-//        while(true){
-//            current = open.poll();
-//            if(current==null)break;
-//            closed[current.i][current.j]=true;
-//
-//            if(current.equals(grid[endI][endJ])){
-//                return;
-//            }
-//
-//            Node t;
-//            if(current.i-1>=0){
-//                t = grid[current.i-1][current.j];
-//                checkAndUpdateCost(current, t, current.finalCost+V_H_COST);
-//
-//                if(current.j-1>=0){
-//                    t = grid[current.i-1][current.j-1];
-//                    checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST);
-//                }
-//
-//                if(current.j+1<grid[0].length){
-//                    t = grid[current.i-1][current.j+1];
-//                    checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST);
-//                }
-//            }
-//
-//            if(current.j-1>=0){
-//                t = grid[current.i][current.j-1];
-//                checkAndUpdateCost(current, t, current.finalCost+V_H_COST);
-//            }
-//
-//            if(current.j+1<grid[0].length){
-//                t = grid[current.i][current.j+1];
-//                checkAndUpdateCost(current, t, current.finalCost+V_H_COST);
-//            }
-//
-//            if(current.i+1<grid.length){
-//                t = grid[current.i+1][current.j];
-//                checkAndUpdateCost(current, t, current.finalCost+V_H_COST);
-//
-//                if(current.j-1>=0){
-//                    t = grid[current.i+1][current.j-1];
-//                    checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST);
-//                }
-//
-//                if(current.j+1<grid[0].length){
-//                    t = grid[current.i+1][current.j+1];
-//                    checkAndUpdateCost(current, t, current.finalCost+DIAGONAL_COST);
-//                }
-//            }
-//        }
-//    }
-//
-//    /*
-//    Params :
-//    tCase = test case No.
-//    x, y = Board's dimensions
-//    si, sj = start location's x and y coordinates
-//    ei, ej = end location's x and y coordinates
-//    int[][] blocked = array containing inaccessible LogicLayer.Node coordinates
-//    */
-//
-//    public NodeCollection test( int x, int y, int si, int sj, int ei, int ej, int[][] blocked)
-//    {
-//        //Reset
-//        NodeCollection nodeCollection = new NodeCollection();
-//
-//        grid = new Node[x][y];
-//        closed = new boolean[x][y];
-//        open = new PriorityQueue<>((Object o1, Object o2) ->
-//        {
-//            Node c1 = (Node)o1;
-//            Node c2 = (Node)o2;
-//            if(c1.finalCost < c2.finalCost )
-//            {
-//                return -1;
-//            }
-//            else
-//            {
-//                if(c1.finalCost > c2.finalCost){
-//                    return 1;
-//                }
-//                else{
-//                    return 0;
-//                }
-//            }
-//        });
-//        //Set start position
-//        setStartNode(si, sj);  //Setting to 0,0 by default. Will be useful for the UI part
-//
-//        //Set End Location
-//        setEndNode(ei, ej);
-//
-//        for(int i=0;i<x;++i)
-//        {
-//            for(int j=0;j<y;++j)
-//            {
-//                grid[i][j] = new Node(i, j);
-//                grid[i][j].heuristicCost = Math.abs(i-endI)+Math.abs(j-endJ);
-////                  System.out.print(grid[i][j].heuristicCost+" ");
-//            }
-////              System.out.println();
-//        }
-//        grid[si][sj].finalCost = 0;
-//
-//           /*
-//             Set blocked Nodes. Simply set the LogicLayer.Node values to null
-//             for blocked Nodes.
-//           */
-//        for(int i=0;i<blocked.length;++i)
-//        {
-//            setBlocked(blocked[i][0], blocked[i][1]);
-//        }
-//
-//        //Display initial map
-//        System.out.println("Grid: ");
-//        for(int i=0;i<x;++i)
-//        {
-//            for(int j=0;j<y;++j)
-//            {
-//                if(i==si&&j==sj)System.out.print("SO  "); //Source
-//                else if(i==ei && j==ej)System.out.print("DE  ");  //Destination
-//                else if(grid[i][j]!=null)System.out.printf("%-3d ", 0);
-//                else System.out.print("BL  ");
-//            }
-//            System.out.println();
-//        }
-//        System.out.println();
-//
-//        //AStar init
-//        AStar();
-//
-//        System.out.println("\nScores for Nodes: ");
-//        for(int i=0;i<x;++i){
-//            for(int j=0;j<y;++j){
-//                if(grid[i][j]!=null)System.out.printf("%-3d ", grid[i][j].finalCost);
-//                else System.out.print("BL  ");
-//            }
-//            System.out.println();
-//        }
-//        System.out.println();
-//
-//        if(closed[endI][endJ]){
-//            System.out.println("Path: ");
-//            Node current = grid[endI][endJ];
-//            int i=0;
-//            Node[] nodesArray = new Node[30];
-//            while(current.parent!=null){
-//                nodeCollection.addNewNode(current);
-//                System.out.print("[" +current.getI() + ", "+current.getJ()+"]");
-//                //tablica nodes zeby potem odwrocic kolejnosc przy wrzucaniu do nodeCollection
-//                nodesArray[i] = current;
-//                System.out.print(" => ");
-//                current = current.parent;
-//                i++;
-//
-//            }
-//            System.out.println("End of path");
-//
-////
-////            //odwracanie kolejnosci nodes przy dodawania do nodeCollection
-////            for(i=nodesArray.length-1; i>=0;i--)
-////            {
-////                nodeCollection.addNewNode(nodesArray[i]);
-////            }
-//
-//        }else System.out.println("No possible path");
-//
-//        return nodeCollection;
-//    }
-//
-//    public static void main(String[] args) throws Exception{
-////        test(1, 5, 5, 0, 0, 3, 2, new int[][]{{0,4},{2,2},{3,1},{3,3}});
-////        test(3, 7, 7, 2, 1, 5, 4, new int[][]{{4,1},{4,3},{5,3},{2,3}});
-////        test(1, 5, 5, 0, 0, 4, 4, new int[][]{{3,4},{3,3},{4,3}});
-//    }
+
+    public List<Node> findPath() {
+        openList.add(initialNode);
+        while (!isEmpty(openList)) {
+            Node currentNode = openList.poll();
+            closedList.add(currentNode);
+            if (isFinalNode(currentNode)) {
+                return getPath(currentNode);
+            } else {
+                addAdjacentNodes(currentNode);
+            }
+        }
+        return new ArrayList<Node>();
+    }
+
+    private List<Node> getPath(Node currentNode) {
+        List<Node> path = new ArrayList<Node>();
+        path.add(currentNode);
+        Node parent;
+        while ((parent = currentNode.getParent()) != null) {
+            path.add(0, parent);
+            currentNode = parent;
+        }
+        return path;
+    }
+
+    private void addAdjacentNodes(Node currentNode) {
+        addAdjacentUpperRow(currentNode);
+        addAdjacentMiddleRow(currentNode);
+        addAdjacentLowerRow(currentNode);
+    }
+
+    private void addAdjacentLowerRow(Node currentNode) {
+        int row = currentNode.getRow();
+        int col = currentNode.getCol();
+        int lowerRow = row + 1;
+        if (lowerRow < getSearchArea().length) {
+            if (col - 1 >= 0) {
+                checkNode(currentNode, col - 1, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
+            }
+            if (col + 1 < getSearchArea()[0].length) {
+                checkNode(currentNode, col + 1, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
+            }
+            checkNode(currentNode, col, lowerRow, getHvCost());
+        }
+    }
+
+    private void addAdjacentMiddleRow(Node currentNode) {
+        int row = currentNode.getRow();
+        int col = currentNode.getCol();
+        int middleRow = row;
+        if (col - 1 >= 0) {
+            checkNode(currentNode, col - 1, middleRow, getHvCost());
+        }
+        if (col + 1 < getSearchArea()[0].length) {
+            checkNode(currentNode, col + 1, middleRow, getHvCost());
+        }
+    }
+
+    private void addAdjacentUpperRow(Node currentNode) {
+        int row = currentNode.getRow();
+        int col = currentNode.getCol();
+        int upperRow = row - 1;
+        if (upperRow >= 0) {
+            if (col - 1 >= 0) {
+                checkNode(currentNode, col - 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+            }
+            if (col + 1 < getSearchArea()[0].length) {
+                checkNode(currentNode, col + 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+            }
+            checkNode(currentNode, col, upperRow, getHvCost());
+        }
+    }
+
+    private void checkNode(Node currentNode, int col, int row, int cost) {
+        Node adjacentNode = getSearchArea()[row][col];
+        if (!adjacentNode.isBlock() && !getClosedList().contains(adjacentNode)) {
+            if (!getOpenList().contains(adjacentNode)) {
+                adjacentNode.setNodeData(currentNode, cost);
+                getOpenList().add(adjacentNode);
+            } else {
+                boolean changed = adjacentNode.checkBetterPath(currentNode, cost);
+                if (changed) {
+                    // Remove and Add the changed node, so that the PriorityQueue can sort again its
+                    // contents with the modified "finalCost" value of the modified node
+                    getOpenList().remove(adjacentNode);
+                    getOpenList().add(adjacentNode);
+                }
+            }
+        }
+    }
+
+    private boolean isFinalNode(Node currentNode) {
+        return currentNode.equals(finalNode);
+    }
+
+    private boolean isEmpty(PriorityQueue<Node> openList) {
+        return openList.size() == 0;
+    }
+
+    private void setBlock(int row, int col) {
+        this.searchArea[row][col].setBlock(true);
+    }
+
+    public Node getInitialNode() {
+        return initialNode;
+    }
+
+    public void setInitialNode(Node initialNode) {
+        this.initialNode = initialNode;
+    }
+
+    public Node getFinalNode() {
+        return finalNode;
+    }
+
+    public void setFinalNode(Node finalNode) {
+        this.finalNode = finalNode;
+    }
+
+    public Node[][] getSearchArea() {
+        return searchArea;
+    }
+
+    public void setSearchArea(Node[][] searchArea) {
+        this.searchArea = searchArea;
+    }
+
+    public PriorityQueue<Node> getOpenList() {
+        return openList;
+    }
+
+    public void setOpenList(PriorityQueue<Node> openList) {
+        this.openList = openList;
+    }
+
+    public List<Node> getClosedList() {
+        return closedList;
+    }
+
+    public void setClosedList(List<Node> closedList) {
+        this.closedList = closedList;
+    }
+
+    public int getHvCost() {
+        return hvCost;
+    }
+
+    public void setHvCost(int hvCost) {
+        this.hvCost = hvCost;
+    }
+
+    private int getDiagonalCost() {
+        return diagonalCost;
+    }
+
+    private void setDiagonalCost(int diagonalCost) {
+        this.diagonalCost = diagonalCost;
+    }
 }
