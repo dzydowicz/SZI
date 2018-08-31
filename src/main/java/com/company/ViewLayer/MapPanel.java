@@ -160,6 +160,36 @@ public class MapPanel extends JPanel {
         // this.add(gameplay, BorderLayout.CENTER);
     }
 
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        super.paintComponent(g2);
+        g.drawImage(bgImage, 0, 0, null);
+        drawNet(g2);
+        drawTables(g2);
+        drawWaiter(g2);
+        
+        //Move move = null;
+//
+//        g.setColor(Color.WHITE);
+//        g.fillRect(waiterXpos, waiterYpos, 40, 40);
+
+//        revalidate();
+//
+//        if (waiterFood) {
+//            g.drawImage(waiterFoodImage, waiterXpos - 40, waiterYpos - 40, this);
+//        }
+//        if (waiterWine) {
+//            g.drawImage(waiterWineImage, waiterXpos - 40, waiterYpos - 40, this);
+//        }
+//        if (!waiterFood && !waiterWine) {
+//            g.drawImage(waiter, waiterXpos - 40, waiterYpos - 40, this);
+//        }
+//        revalidate();
+
+    }
+
     //TODO poprawić generwoanie stolików
     private ArrayList<Table> calculateTables(int numberOfTables) throws IOException {
 
@@ -195,36 +225,9 @@ public class MapPanel extends JPanel {
     }
 
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
 
-            g.drawImage(bgImage, 0, 0, null);
-            drawNet(g);
-            drawTables(g);
 
-        drawWaiter(g);
-        //Move move = null;
-//
-//        g.setColor(Color.WHITE);
-//        g.fillRect(waiterXpos, waiterYpos, 40, 40);
-
-//        revalidate();
-//
-//        if (waiterFood) {
-//            g.drawImage(waiterFoodImage, waiterXpos - 40, waiterYpos - 40, this);
-//        }
-//        if (waiterWine) {
-//            g.drawImage(waiterWineImage, waiterXpos - 40, waiterYpos - 40, this);
-//        }
-//        if (!waiterFood && !waiterWine) {
-//            g.drawImage(waiter, waiterXpos - 40, waiterYpos - 40, this);
-//        }
-//        revalidate();
-
-    }
-
-    private void drawWaiter(Graphics g) {
+    private void drawWaiter(Graphics2D g) {
         g.drawImage(waiter, waiterXpos, waiterYpos, this);
 
     }
@@ -234,7 +237,7 @@ public class MapPanel extends JPanel {
         return false;
     }
 
-    private void drawNet(Graphics g) {
+    private void drawNet(Graphics2D g) {
         g.setColor(Color.GRAY);
         for (int z = 0; z < 1200; z = z + 20) {
             g.drawLine(z, 0, z, 1200);
@@ -244,7 +247,7 @@ public class MapPanel extends JPanel {
         }
     }
 
-    private void drawTables(Graphics g) {
+    private void drawTables(Graphics2D g) {
         int areaStartHeight = 300;
         int numberOfPeople;
         int tableX;
