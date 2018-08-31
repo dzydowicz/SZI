@@ -1,5 +1,6 @@
 package com.company.ViewLayer;
 
+import com.company.LogicLayer.AStar.LockedArea;
 import com.company.LogicLayer.Coordinates;
 import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
 import com.company.LogicLayer.GeneticAlgorithm.Population;
@@ -15,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MapPanel extends JPanel {
@@ -58,11 +60,12 @@ public class MapPanel extends JPanel {
 
     //    int numberOfTables = ThreadLocalRandom.current().nextInt(4, 7 + 1);
     int numberOfTables = 10;
-    ArrayList<Table> tables;
-    ArrayList<Coordinates> chairs = new ArrayList<>();
+    List<Table> tables;
+    List<Coordinates> chairs = new ArrayList<>();
     //ArrayList<BufferedImage> avatars = new ArrayList<>();
-    ArrayList<BufferedImage> numbers = new ArrayList<>();
+    List<BufferedImage> numbers = new ArrayList<>();
 
+    private List<LockedArea> lockedAreas = new ArrayList<>();
 
     public MapPanel(int screenWidth, int screenHeight) throws IOException {
 
@@ -122,6 +125,11 @@ public class MapPanel extends JPanel {
         }
 
         tables = calculateTables(numberOfTables);
+
+        for (Table table : tables)
+        {
+            lockedAreas.add(new LockedArea(table.getX(), table.getY(), table.getX() + 140, table.getY() + 112));
+        }
 
         Population population = new Population(50, true);
         System.out.println("Initial distance: " + population.getFittest().getDistance());
