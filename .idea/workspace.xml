@@ -2,37 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a28c3783-6026-4689-8cc1-78b8b00ce2ca" name="Default Changelist" comment="image recognition">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/food_images/pizza/one.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/AStar/AStar.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Coordinates.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/GamePlay.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Move.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Node.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Waiter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/company/ViewLayer/DashboardPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/neural_network/digits/output_graph.pb" beforeDir="false" afterPath="$PROJECT_DIR$/resources/neural_network/digits/digits_graph.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/neural_network/digits/output_labels.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/neural_network/digits/digits_labels.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/neural_network/food/output_graph.pb" beforeDir="false" afterPath="$PROJECT_DIR$/resources/neural_network/food/food_graph.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/neural_network/food/output_labels.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/neural_network/food/food_labels.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/numbers/one.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/numbers/one.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/waiter.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/waiter.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Table.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Table.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/company/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/company/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/company/TensorFlow/LabelImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/company/TensorFlow/LabelImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MapPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MapPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/GeneticAlgorithm/GeneticAlgorithm.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/GeneticAlgorithm/GeneticAlgorithm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/GeneticAlgorithm/Population.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/GeneticAlgorithm/Population.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/GeneticAlgorithm/Tour.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/GeneticAlgorithm/Tour.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/Table.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/LogicLayer/Table.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/TensorFlow/LabelImage$GraphBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/TensorFlow/LabelImage$GraphBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/TensorFlow/LabelImage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/TensorFlow/LabelImage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/ViewLayer/MainFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/ViewLayer/MainFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/company/ViewLayer/MapPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/company/ViewLayer/MapPanel.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/inteligencja/target/" />
@@ -107,13 +77,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="4079" />
+          <entry key="java" value="4095" />
           <entry key="xml" value="31" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="4079" />
+          <entry key="JAVA" value="4095" />
           <entry key="XML" value="31" />
         </counts>
       </usages-collector>
@@ -124,7 +94,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MainFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
+            <state relative-caret-position="522">
               <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
             </state>
           </provider>
@@ -133,8 +103,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MapPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="309" lean-forward="true" selection-start-line="309" selection-end-line="309" />
+            <state relative-caret-position="162">
+              <caret line="164" column="8" selection-start-line="164" selection-start-column="8" selection-end-line="164" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#8535#8536#0" expanded="true" />
@@ -196,7 +166,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/company/LogicLayer/GamePlay.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
+            <state relative-caret-position="288">
               <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -208,7 +178,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Waiter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
+            <state relative-caret-position="234">
               <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -416,7 +386,7 @@
     <property name="SearchEverywhereHistoryKey" value="getf&#9;PSI&#9;JAVA://com.company.LogicLayer.GeneticAlgorithm.Population#getFittest&#10;pom&#9;FILE&#9;file://D:/sztuczna/2018/pom.xml&#10;pom.xml&#9;FILE&#9;jar://C:/Users/pc/.m2/repository/org/tensorflow/libtensorflow/1.10.0/libtensorflow-1.10.0.jar!/META-INF/maven/org.tensorflow/libtensorflow/pom.xml&#10;maven&#9;ACTION&#9;ActivateMavenProjectsToolWindow&#10;label&#9;FILE&#9;file://D:/sztuczna/2018/src/com/company/TensorFlow/LabelImage.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535728375036" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535728803530" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../MY" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
@@ -737,16 +707,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/company/LogicLayer/GamePlay.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/company/ViewLayer/DashboardPanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
@@ -761,16 +721,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="10" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Waiter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -813,17 +763,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/company/LogicLayer/Waiter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/company/LogicLayer/GamePlay.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MainFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
+        <state relative-caret-position="522">
           <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/company/ViewLayer/MapPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="309" lean-forward="true" selection-start-line="309" selection-end-line="309" />
+        <state relative-caret-position="162">
+          <caret line="164" column="8" selection-start-line="164" selection-start-column="8" selection-end-line="164" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#8535#8536#0" expanded="true" />
