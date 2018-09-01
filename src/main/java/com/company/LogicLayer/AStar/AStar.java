@@ -27,7 +27,6 @@ public class AStar {
         this.diagonalCost = diagonalCost;
         setInitialNode(initialNode);
         setFinalNode(finalNode);
-        setLockedAreas(lockedAreas);
         this.openList = new PriorityQueue<Node>(new Comparator<Node>() {
             @Override
             public int compare(Node node0, Node node1) {
@@ -35,6 +34,7 @@ public class AStar {
             }
         });
         setNodes();
+        setLockedAreas(lockedAreas);
         this.closedList = new ArrayList<Node>();
     }
 
@@ -65,7 +65,14 @@ public class AStar {
             {
                 for(int j = lockedArea.getStartY(); j <= lockedArea.getEndY(); j++)
                 {
-                    setBlock(i, j);
+                    try
+                    {
+                        setBlock(i, j);
+                    }
+                    catch(NullPointerException | ArrayIndexOutOfBoundsException e)
+                    {
+                        System.out.println("x=" + i + ", y=" + j);
+                    }
                 }
             }
         }

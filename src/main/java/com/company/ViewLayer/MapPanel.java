@@ -1,6 +1,8 @@
 package com.company.ViewLayer;
 
+import com.company.LogicLayer.AStar.AStar;
 import com.company.LogicLayer.AStar.LockedArea;
+import com.company.LogicLayer.AStar.Node;
 import com.company.LogicLayer.Coordinates;
 import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
 import com.company.LogicLayer.GeneticAlgorithm.Population;
@@ -130,6 +132,8 @@ public class MapPanel extends JPanel {
         {
             lockedAreas.add(new LockedArea(table.getX(), table.getY(), table.getX() + 140, table.getY() + 112));
         }
+
+        List<Node> nodes = AStar.findPath(100, 100, 200, 200, lockedAreas);
 
         Population population = new Population(50, true);
         System.out.println("Initial distance: " + population.getFittest().getDistance());
