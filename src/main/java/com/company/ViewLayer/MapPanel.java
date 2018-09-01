@@ -181,7 +181,7 @@ public class MapPanel extends JPanel {
         drawNet(g2);
         drawTables(g2);
         drawWaiter(g2);
-        
+
         //Move move = null;
 //
 //        g.setColor(Color.WHITE);
