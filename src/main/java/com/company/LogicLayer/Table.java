@@ -73,8 +73,8 @@ public class Table {
     }
 
     public double distanceTo(Table table) {
-        int xDistance = Math.abs(getX() - table.getX());
-        int yDistance = Math.abs(getY() - table.getY());
+        int xDistance = Math.abs(getWaiterDockXPos() - table.getWaiterDockXPos());
+        int yDistance = Math.abs(getWaiterDockYPos() - table.getWaiterDockYPos());
         double distance = Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
 
         return distance;

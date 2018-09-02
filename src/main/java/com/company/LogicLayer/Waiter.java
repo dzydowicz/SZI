@@ -43,22 +43,20 @@ public class Waiter implements Runnable {
                 int counter = 0;
                 int numOfActiveTables = 0;
 
-                for(int i = 0; i < tableList.size(); i++)
-                {
-                    if(tableList.get(i).getNumberOfPeople() > 0){
-                        numOfActiveTables +=1;
+                for (int i = 0; i < tableList.size(); i++) {
+                    if (tableList.get(i).getNumberOfPeople() > 0) {
+                        numOfActiveTables += 1;
                     }
                 }
 
-                for(int i = 0; i < tableList.size(); i++)
-                {
-                    if(tableList.get(i).getStatus() == 3){
+                for (int i = 0; i < tableList.size(); i++) {
+                    if (tableList.get(i).getStatus() == 3) {
                         counter += 1;
                     }
 
-                   // System.out.println("Num of active tables: " + numOfActiveTables + "Num of ready to order tables:" + counter);
+                    // System.out.println("Num of active tables: " + numOfActiveTables + "Num of ready to order tables:" + counter);
 
-                    if(counter == numOfActiveTables){
+                    if (counter == numOfActiveTables) {
                         notAllReady = false;
                     }
                 }
@@ -68,15 +66,15 @@ public class Waiter implements Runnable {
         }
         List<Table> tableList = mapPanel.getTableList();
 
-        for(int j = 0 ; j<tableList.size(); j++ ){
-            if(tableList.get(j).getNumberOfPeople() > 0){
+        for (int j = 0; j < tableList.size(); j++) {
+            if (tableList.get(j).getNumberOfPeople() > 0) {
                 activeTableList.add(tableList.get(j));
             }
         }
         System.out.println("BINGO, wszyscy gotowi");
 
 
-        for(Table temp : activeTableList){
+        for (Table temp : activeTableList) {
             TourManager.addTable(temp);
             System.out.println("dodano stol do tour managera");
         }
@@ -101,12 +99,41 @@ public class Waiter implements Runnable {
 
         Tour tour = population.getFittest();
         Table table;
+        List<Table> fromGeneticAlgorithm = new ArrayList<>();
         for (int i = 0; i < tour.tourSize(); i++) {
             table = tour.getTable(i);
+            fromGeneticAlgorithm.add(tour.getTable(i));
             System.out.print(" => " + table.getTableNumber());
+        }
+        System.out.println();
+        int waiterXPos = mapPanel.getWaiterXpos();
+        int waiterYPos = mapPanel.getWaiterYpos();
+        List<Table> optimizedRouteForWaiter = getStartingPoint(fromGeneticAlgorithm, waiterXPos, waiterYPos);
 
+    }
+
+    public List<Table> getStartingPoint(List<Table> fromGeneticAlgorithm, int waiterXPos, int waiterYPos) {
+        Table closest = null;
+        List<Table> bestRoute = new ArrayList<>();
+        double min = Integer.MAX_VALUE;
+
+
+        //szukamy najblizszego stolika z listy stolow ktora zwrocil algorytm genetyczny
+        //najblizszy bedzie punktem poczatkowym kelnera
+        for(Table temp : fromGeneticAlgorithm){
+            System.out.println("stol numer : "+ temp.getTableNumber() + " XPOS: "+ temp.getX() + " YPOS: " + temp.getY());
+            int xDistance = Math.abs(waiterXPos - temp.getWaiterDockXPos());
+            int yDistance = Math.abs(waiterYPos - temp.getWaiterDockYPos());
+            double distance = Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
+            if(distance < min){
+                min = distance;
+                closest = temp;
+            }
         }
 
+
+
+        return bestRoute;
     }
 
 
