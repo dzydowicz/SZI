@@ -14,6 +14,10 @@ public class Table {
     protected Integer table_number;
     private int xPos;
     private int yPos;
+
+
+    private int waiterDockXPos;
+    private int waiterDockYPos;
     private int status;
     private int numberOfPeople;
     private ArrayList<BufferedImage> avatars = new ArrayList<>();
@@ -39,6 +43,9 @@ public class Table {
         this.yPos = yPos;
         this.numberOfPeople = numberOfPeople;
         this.status = status;
+
+        this.waiterDockXPos = xPos + 70;
+        this.waiterDockYPos = yPos - 20;
 
         for (int i = 0; i < numberOfPeople; i++) {
             choosenAvatars.add(avatars.get(ThreadLocalRandom.current().nextInt(avatars.size())));
@@ -88,5 +95,13 @@ public class Table {
 
     public void setOrder(Meal meal) {
         this.meal = meal;
+    }
+
+    public int getWaiterDockXPos() {
+        return waiterDockXPos;
+    }
+
+    public int getWaiterDockYPos() {
+        return waiterDockYPos;
     }
 }

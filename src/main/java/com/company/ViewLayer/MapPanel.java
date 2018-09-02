@@ -121,28 +121,8 @@ public class MapPanel extends JPanel {
 
        // List<Node> nodes = AStar.findPath(100, 100, 110, 110, lockedAreas);
 
-        Population population = new Population(50, true);
-        System.out.println("Initial distance: " + population.getFittest().getDistance());
 
-        population = GeneticAlgorithm.evolvePopulation(population);
-        for (int i = 0; i < 100; i++) {
-            population = GeneticAlgorithm.evolvePopulation(population);
-        }
 
-        System.out.println("Finished");
-        System.out.println("Final distance: " + population.getFittest().getDistance());
-        System.out.println("Solution:");
-        System.out.println(population.getFittest());
-
-        Tour tour = population.getFittest();
-
-        Table table;
-
-        for (int i = 0; i < tour.tourSize(); i++) {
-            table = tour.getTable(i);
-            System.out.print(" => " + table.getTableNumber());
-
-        }
         System.out.println();
 
         LabelImage labelImage = new LabelImage();
@@ -201,14 +181,12 @@ public class MapPanel extends JPanel {
             if (xPos < 880) {
                 Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 2);
                 coordinatesOfTables.add(table);
-                TourManager.addTable(table);
                 xPos += 200;
             } else {
                 xPos = 30;
                 yPos += 220;
                 Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 2);
                 coordinatesOfTables.add(table);
-                TourManager.addTable(table);
                 xPos += 200;
             }
         }
@@ -294,9 +272,14 @@ public class MapPanel extends JPanel {
             if (tables.get(i).getNumberOfPeople() > 0) {
 
                 for (int j = 0; j < tables.get(i).getNumberOfPeople(); j++) {
-
                     g.drawImage(tables.get(i).getAvatars().get(j), tableX + chairs.get(j).getX(), tableY + chairs.get(j).getY(), this);
                 }
+
+                g.setColor(Color.GREEN);
+                g.setFont(new Font("Helvetica", Font.BOLD, 12));
+                g.drawString("X", tables.get(i).getWaiterDockXPos(), tables.get(i).getWaiterDockYPos());
+
+
                 if(tables.get(i).getStatus() == 1){
                     g.drawImage(yellowBulb, tableX + 55, tableY - 10, this);
                 }
@@ -313,8 +296,6 @@ public class MapPanel extends JPanel {
 
             g.setColor(Color.WHITE);
             g.setFont(new Font("Helvetica", Font.BOLD, 12));
-
-
             g.drawString("Table ID: " + tables.get(i).getTableNumber() + " | X,Y: " + (tableX) + "," + (tableY), tableX, tableY - 40);
 
             //todo poprawic kolory numerkow, cos wymyslic madrego na stoliki

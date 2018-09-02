@@ -1,14 +1,21 @@
 package com.company.LogicLayer;
 
+import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
+import com.company.LogicLayer.GeneticAlgorithm.Population;
+import com.company.LogicLayer.GeneticAlgorithm.Tour;
+import com.company.LogicLayer.GeneticAlgorithm.TourManager;
 import com.company.ViewLayer.MainFrame;
 import com.company.ViewLayer.MapPanel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Waiter implements Runnable {
     @Override
     public void run() {
+
+        boolean notAllReady = true;
 
         MainFrame mainFrame = null;
         try {
@@ -25,7 +32,9 @@ public class Waiter implements Runnable {
         mapPanel.repaint();
         mapPanel.revalidate();
 
-        while (true) {
+        List<Table> activeTableList = new ArrayList<>();
+
+        while (notAllReady) {
             try {
                 Thread.sleep(500);
 
@@ -47,18 +56,57 @@ public class Waiter implements Runnable {
                         counter += 1;
                     }
 
-                    System.out.println("Num of active tables: " + numOfActiveTables + "Num of ready to order tables:" + counter);
+                   // System.out.println("Num of active tables: " + numOfActiveTables + "Num of ready to order tables:" + counter);
 
                     if(counter == numOfActiveTables){
-                        System.out.println("BINGO, wszyscy gotowi");
-                        Thread.sleep(10000);
+                        notAllReady = false;
                     }
                 }
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        List<Table> tableList = mapPanel.getTableList();
+
+        for(int j = 0 ; j<tableList.size(); j++ ){
+            if(tableList.get(j).getNumberOfPeople() > 0){
+                activeTableList.add(tableList.get(j));
+            }
+        }
+        System.out.println("BINGO, wszyscy gotowi");
+
+
+        for(Table temp : activeTableList){
+            TourManager.addTable(temp);
+            System.out.println("dodano stol do tour managera");
+        }
+
+
+        /**
+         * ALGORYTM GENETYCZNY
+         * SLUZY DO WYZNACZENIA NAJBARDZIEJ OPTYMALNEJ SCIEZKI POMIEDZY STOLIKAMI
+         */
+        Population population = new Population(50, true);
+        System.out.println("Initial distance: " + population.getFittest().getDistance());
+
+        population = GeneticAlgorithm.evolvePopulation(population);
+        for (int i = 0; i < 10; i++) {
+            population = GeneticAlgorithm.evolvePopulation(population);
+        }
+
+        System.out.println("Finished");
+        System.out.println("Final distance: " + population.getFittest().getDistance());
+        System.out.println("Solution:");
+        System.out.println(population.getFittest());
+
+        Tour tour = population.getFittest();
+        Table table;
+        for (int i = 0; i < tour.tourSize(); i++) {
+            table = tour.getTable(i);
+            System.out.print(" => " + table.getTableNumber());
+
+        }
+
     }
 
 

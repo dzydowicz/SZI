@@ -55,7 +55,7 @@ public class OrdersService {
         Meal meal;
         int x = Integer.parseInt(text[1]);
         meal = new Meal(text[0],x);
-         System.out.println("nazwa posilku " + meal.getName());
+         //System.out.println("nazwa posilku " + meal.getName());
         menu.add(meal);
     }
 

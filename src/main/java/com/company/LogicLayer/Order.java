@@ -34,7 +34,7 @@ public class Order implements Runnable {
         List<Table> tableList = mapPanel.getTableList();
 
         try {
-            int randomTime = ThreadLocalRandom.current().nextInt(3000, 10000 + 1);
+            int randomTime = ThreadLocalRandom.current().nextInt(100, 1000 + 1);
             Thread.sleep(randomTime);
             tableList.get(table.getTableNumber()).setOrder(new Meal("testMeal", 10));
             tableList.get(table.getTableNumber()).setStatus(3);
