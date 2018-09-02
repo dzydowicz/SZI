@@ -1,5 +1,7 @@
 package com.company.ViewLayer;
 
+import com.company.LogicLayer.OrdersService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -9,12 +11,13 @@ public class MainFrame extends JFrame {
 
     static public MainFrame instance;
 
-    MapPanel mapPanel;
+    private MapPanel mapPanel;
 
-    int screenWidth = 1024;
-    int screenHeight = 768;
+    private int screenWidth = 1024;
+    private int screenHeight = 768;
+    String [][] listaMenu = new String[0][];
 
-    JPanel leftPanel, rightPanel, northPanel, newOrdersPanel, dashboardPanel;
+    private JPanel leftPanel, rightPanel, northPanel, newOrdersPanel, dashboardPanel, menuPanel;
 
     public static MainFrame getInstance() throws IOException {
         if (instance == null) {
@@ -46,17 +49,31 @@ public class MainFrame extends JFrame {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         this.add(leftPanel, BorderLayout.WEST);
 
-        //utworzenie panelu z zamowieniami
-//        String [][] orderList = {{"", ""}};
-//        newOrdersPanel = new OrdersPanel(orderList, "Zamowienia:", screenWidth, screenHeight);
-//        newOrdersPanel.setPreferredSize(new Dimension(380, 768));
+        rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        this.add(rightPanel, BorderLayout.EAST);
+
+//        //utworzenie panelu z zamowieniami
+        String [][] orderList = {{"", ""}};
+        newOrdersPanel = new OrdersPanel(orderList, "Zamowienia:", screenWidth, screenHeight);
+        newOrdersPanel.setPreferredSize(new Dimension(380, 768));
+        leftPanel.add(newOrdersPanel);
+
+        //utworzenie tabeli z menu
+        try {
+            listaMenu = OrdersService.getInstance().getMenuToDisplay();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        menuPanel = new MenuPanel(listaMenu, screenWidth, screenHeight);
+        menuPanel.setPreferredSize(new Dimension(300,768));
+        rightPanel.add(menuPanel);
 
         try {
             dashboardPanel = new DashboardPanel();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         leftPanel.add(dashboardPanel);
 
         pack();

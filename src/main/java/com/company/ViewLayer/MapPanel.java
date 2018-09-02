@@ -24,8 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MapPanel extends JPanel {
 
     int screenWidth, screenHeight;
-    int szerokoscPola;
-    int wysokoscPola;
+
     public int waiterXpos;
     public int waiterYpos; //pozycja w px
     public int wineXpos;
@@ -53,9 +52,6 @@ public class MapPanel extends JPanel {
     BufferedImage one, two, three, four, five;
 
 
-    public Boolean alreadyDrawed = false;
-
-    int[][] map = new int[30][25];
     //int randomMap = new Random().nextInt(3) + 1;
     public String WINE_PATH = "resources/wine1.png";
     public String FOOD_PATH = "resources/food1.png";
@@ -71,25 +67,16 @@ public class MapPanel extends JPanel {
 
     public MapPanel(int screenWidth, int screenHeight) throws IOException {
 
-        chairs.add(new Coordinates(20,-15));
-        chairs.add(new Coordinates(90,-15));
-        chairs.add(new Coordinates(20,30));
-        chairs.add(new Coordinates(90,30));
+        chairs.add(new Coordinates(20, -15));
+        chairs.add(new Coordinates(90, -15));
+        chairs.add(new Coordinates(20, 30));
+        chairs.add(new Coordinates(90, 30));
 
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
 
-        szerokoscPola = calculateHeightForIcon();
-        wysokoscPola = calculateHeightForIcon();
-
-        waiterXpos = 400;
-        waiterYpos = 160;
-
-        wineXpos = 400;
-        wineYpos = 40;
-
-        foodXpos = 520;
-        foodYpos = 40;
+        waiterXpos = 100;
+        waiterYpos = 100;
 
         setPreferredSize(new Dimension(screenWidth, screenHeight));
 
@@ -128,12 +115,11 @@ public class MapPanel extends JPanel {
 
         tables = calculateTables(numberOfTables);
 
-        for (Table table : tables)
-        {
+        for (Table table : tables) {
             lockedAreas.add(new LockedArea(table.getX(), table.getY(), table.getX() + 140, table.getY() + 112));
         }
 
-        List<Node> nodes = AStar.findPath(100, 100, 200, 200, lockedAreas);
+       // List<Node> nodes = AStar.findPath(100, 100, 110, 110, lockedAreas);
 
         Population population = new Population(50, true);
         System.out.println("Initial distance: " + population.getFittest().getDistance());
@@ -209,18 +195,18 @@ public class MapPanel extends JPanel {
         ArrayList coordinatesOfTables = new ArrayList<Table>();
         int xPos = 30;
         int yPos = 360;
-        for (int i = 0; i <= numberOfTables; i++) {
+        for (int i = 0; i < numberOfTables; i++) {
             int numberOfPeople = ThreadLocalRandom.current().nextInt(0, 4 + 1);
 
             if (xPos < 880) {
-                Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 1);
+                Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 2);
                 coordinatesOfTables.add(table);
                 TourManager.addTable(table);
                 xPos += 200;
             } else {
                 xPos = 30;
                 yPos += 220;
-                Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 1);
+                Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 2);
                 coordinatesOfTables.add(table);
                 TourManager.addTable(table);
                 xPos += 200;
@@ -235,8 +221,6 @@ public class MapPanel extends JPanel {
         //5/8 - taka czesc pola ma ma panel mapy
         // /21, bo mamy 21 obiektow w jednym wierszu mapy
     }
-
-
 
 
     private void drawWaiter(Graphics2D g) {
@@ -307,13 +291,21 @@ public class MapPanel extends JPanel {
 //
 //            }
 
-            if(tables.get(i).getNumberOfPeople() > 0) {
+            if (tables.get(i).getNumberOfPeople() > 0) {
 
-                for(int j = 0 ; j < tables.get(i).getNumberOfPeople(); j++) {
+                for (int j = 0; j < tables.get(i).getNumberOfPeople(); j++) {
 
-                    g.drawImage(tables.get(i).getAvatars().get(j), tableX+chairs.get(j).getX(), tableY+chairs.get(j).getY(), this);
+                    g.drawImage(tables.get(i).getAvatars().get(j), tableX + chairs.get(j).getX(), tableY + chairs.get(j).getY(), this);
                 }
-                g.drawImage(yellowBulb, tableX + 55, tableY - 10, this);
+                if(tables.get(i).getStatus() == 1){
+                    g.drawImage(yellowBulb, tableX + 55, tableY - 10, this);
+                }
+                if(tables.get(i).getStatus() == 2){
+                    g.drawImage(redBulb, tableX + 55, tableY - 10, this);
+                }
+                if(tables.get(i).getStatus() == 3){
+                    g.drawImage(greenBulb, tableX + 55, tableY - 10, this);
+                }
 
             }
 
@@ -345,5 +337,18 @@ public class MapPanel extends JPanel {
         this.waiterYpos = yPos;
     }
 
+    public int getWaiterXpos() {
+        return waiterXpos;
+    }
+
+    public int getWaiterYpos() {
+        return waiterYpos;
+    }
+
+    public List<LockedArea> getLockedAreas() {
+        return lockedAreas;
+    }
+
+    public List<Table> getTableList() { return tables; }
 
 }

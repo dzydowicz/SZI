@@ -5,19 +5,19 @@ public class Node {
     private int g;
     private int f;
     private int h;
-    private int row;
-    private int col;
+    private int xPos;
+    private int yPos;
     private boolean isBlock;
     private Node parent;
 
-    public Node(int row, int col) {
+    public Node(int xPos, int yPos) {
         super();
-        this.row = row;
-        this.col = col;
+        this.xPos = xPos;
+        this.yPos = yPos;
     }
 
     public void calculateHeuristic(Node finalNode) {
-        this.h = Math.abs(finalNode.getRow() - getRow()) + Math.abs(finalNode.getCol() - getCol());
+        this.h = Math.abs(finalNode.getXPos() - getXPos()) + Math.abs(finalNode.getYPos() - getYPos());
     }
 
     public void setNodeData(Node currentNode, int cost) {
@@ -44,12 +44,12 @@ public class Node {
     @Override
     public boolean equals(Object arg0) {
         Node other = (Node) arg0;
-        return this.getRow() == other.getRow() && this.getCol() == other.getCol();
+        return this.getXPos() == other.getXPos() && this.getYPos() == other.getYPos();
     }
 
     @Override
     public String toString() {
-        return "Node [row=" + row + ", col=" + col + "]";
+        return "Node [xPos=" + xPos + ", yPos=" + yPos + "]";
     }
 
     public int getH() {
@@ -92,19 +92,19 @@ public class Node {
         this.isBlock = isBlock;
     }
 
-    public int getRow() {
-        return row;
+    public int getXPos() {
+        return xPos;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setXPos(int xPos) {
+        this.xPos = xPos;
     }
 
-    public int getCol() {
-        return col;
+    public int getYPos() {
+        return yPos;
     }
 
-    public void setCol(int col) {
-        this.col = col;
+    public void setYPos(int yPos) {
+        this.yPos = yPos;
     }
 }

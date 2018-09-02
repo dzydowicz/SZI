@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,6 +18,7 @@ public class Table {
     private int numberOfPeople;
     private ArrayList<BufferedImage> avatars = new ArrayList<>();
     private ArrayList<BufferedImage> choosenAvatars = new ArrayList<>();
+    Meal meal;
 
 
     public Table(Integer table_number, int xPos, int yPos, int numberOfPeople, int status) throws IOException {
@@ -59,6 +61,10 @@ public class Table {
         return numberOfPeople;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public double distanceTo(Table table) {
         int xDistance = Math.abs(getX() - table.getX());
         int yDistance = Math.abs(getY() - table.getY());
@@ -74,5 +80,13 @@ public class Table {
     @Override
     public String toString() {
         return getX() + ", " + getY();
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setOrder(Meal meal) {
+        this.meal = meal;
     }
 }

@@ -1,0 +1,6 @@
+Hamburger;3
+Hot dog;4
+Paella;6
+Pizza;10
+Spaghetti bolognese;7
+Spring rolls;12

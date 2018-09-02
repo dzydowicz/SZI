@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.concurrent.locks.Lock;
 
 public class AStar {
     private static int DEFAULT_HV_COST = 10; // Horizontal - Vertical Cost
@@ -49,6 +48,7 @@ public class AStar {
 
     public static List<Node> findPath(int startX, int startY, int endX, int endY, List<LockedArea> lockedAreas)
     {
+
         Node initialNode = new Node(startX, startY);
         Node finalNode = new Node(endX, endY);
 
@@ -128,42 +128,42 @@ public class AStar {
     }
 
     private void addAdjacentLowerRow(Node currentNode) {
-        int row = currentNode.getRow();
-        int col = currentNode.getCol();
-        int lowerRow = row + 1;
+        int row = currentNode.getXPos();
+        int col = currentNode.getYPos();
+        int lowerRow = row + 2;
         if (lowerRow < getSearchArea().length) {
-            if (col - 1 >= 0) {
-                checkNode(currentNode, col - 1, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
+            if (col - 2 >= 0) {
+//                checkNode(currentNode, col - 2, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
             }
-            if (col + 1 < getSearchArea()[0].length) {
-                checkNode(currentNode, col + 1, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
+            if (col + 2 < getSearchArea()[0].length) {
+//                checkNode(currentNode, col + 2, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
             }
             checkNode(currentNode, col, lowerRow, getHvCost());
         }
     }
 
     private void addAdjacentMiddleRow(Node currentNode) {
-        int row = currentNode.getRow();
-        int col = currentNode.getCol();
+        int row = currentNode.getXPos();
+        int col = currentNode.getYPos();
         int middleRow = row;
-        if (col - 1 >= 0) {
-            checkNode(currentNode, col - 1, middleRow, getHvCost());
+        if (col - 2 >= 0) {
+            checkNode(currentNode, col - 2, middleRow, getHvCost());
         }
-        if (col + 1 < getSearchArea()[0].length) {
-            checkNode(currentNode, col + 1, middleRow, getHvCost());
+        if (col + 2 < getSearchArea()[0].length) {
+            checkNode(currentNode, col + 2, middleRow, getHvCost());
         }
     }
 
     private void addAdjacentUpperRow(Node currentNode) {
-        int row = currentNode.getRow();
-        int col = currentNode.getCol();
-        int upperRow = row - 1;
+        int row = currentNode.getXPos();
+        int col = currentNode.getYPos();
+        int upperRow = row - 2;
         if (upperRow >= 0) {
-            if (col - 1 >= 0) {
-                checkNode(currentNode, col - 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+            if (col - 2 >= 0) {
+//                checkNode(currentNode, col - 2, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
             }
-            if (col + 1 < getSearchArea()[0].length) {
-                checkNode(currentNode, col + 1, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+            if (col + 2 < getSearchArea()[0].length) {
+//                checkNode(currentNode, col + 2, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
             }
             checkNode(currentNode, col, upperRow, getHvCost());
         }

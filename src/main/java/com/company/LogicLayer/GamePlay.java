@@ -16,7 +16,7 @@ public class GamePlay implements Runnable {
 
 
         threads.execute(new Waiter());
-
+        threads.execute(new ClientsLife());
 
         System.out.println("gameplay thread");
 
@@ -27,7 +27,6 @@ public class GamePlay implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Time from gameplay: " + new Date());
         }
     }
 }
