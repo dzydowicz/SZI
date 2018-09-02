@@ -9,6 +9,7 @@ import com.company.ViewLayer.MapPanel;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Waiter implements Runnable {
@@ -100,6 +101,7 @@ public class Waiter implements Runnable {
         Tour tour = population.getFittest();
         Table table;
         List<Table> fromGeneticAlgorithm = new ArrayList<>();
+        System.out.println("Najlepsza trasa dla stolow bez uwzglednienia pozycji kelnera:");
         for (int i = 0; i < tour.tourSize(); i++) {
             table = tour.getTable(i);
             fromGeneticAlgorithm.add(tour.getTable(i));
@@ -108,7 +110,13 @@ public class Waiter implements Runnable {
         System.out.println();
         int waiterXPos = mapPanel.getWaiterXpos();
         int waiterYPos = mapPanel.getWaiterYpos();
+
+        System.out.println("Najlepsza trasa dla stolow wraz z uwzglednieniem pozycji kelnera:");
         List<Table> optimizedRouteForWaiter = getStartingPoint(fromGeneticAlgorithm, waiterXPos, waiterYPos);
+        for(Table table1 : optimizedRouteForWaiter){
+            System.out.print(" => " + table1.getTableNumber());
+        }
+
 
     }
 
@@ -117,21 +125,24 @@ public class Waiter implements Runnable {
         List<Table> bestRoute = new ArrayList<>();
         double min = Integer.MAX_VALUE;
 
-
         //szukamy najblizszego stolika z listy stolow ktora zwrocil algorytm genetyczny
         //najblizszy bedzie punktem poczatkowym kelnera
-        for(Table temp : fromGeneticAlgorithm){
-            System.out.println("stol numer : "+ temp.getTableNumber() + " XPOS: "+ temp.getX() + " YPOS: " + temp.getY());
+        for (Table temp : fromGeneticAlgorithm) {
             int xDistance = Math.abs(waiterXPos - temp.getWaiterDockXPos());
             int yDistance = Math.abs(waiterYPos - temp.getWaiterDockYPos());
             double distance = Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
-            if(distance < min){
+            if (distance < min) {
                 min = distance;
                 closest = temp;
             }
         }
-
-
+        System.out.println("Stolik bedacy najblizej kelnera: " + closest.getTableNumber());
+        for (int i = fromGeneticAlgorithm.indexOf(closest); i < fromGeneticAlgorithm.size(); i++) {
+            bestRoute.add(fromGeneticAlgorithm.get(i));
+        }
+        for (int j = 0; j < fromGeneticAlgorithm.indexOf(closest); j++) {
+            bestRoute.add(fromGeneticAlgorithm.get(j));
+        }
 
         return bestRoute;
     }
