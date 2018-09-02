@@ -117,6 +117,11 @@ public class Waiter implements Runnable {
             System.out.print(" => " + table1.getTableNumber());
         }
 
+        /**
+         * Tu jest moment w którym kelner ma już trase do stolików aby zebrać od nich zamówienia,
+         * potrzebujemy astarem wyznaczyć droge pokolei do kazdego stolu z poprzedniego
+         */
+
 
     }
 
