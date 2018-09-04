@@ -165,7 +165,7 @@ public class Waiter implements Runnable {
             mapPanel.revalidate();
         }
 
-        goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 580, 150, mapPanel.getLockedAreas()));
+        goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 870, 150, mapPanel.getLockedAreas()));
 
         threads.execute(new Kitchen(optimizedRouteForWaiter));
 
