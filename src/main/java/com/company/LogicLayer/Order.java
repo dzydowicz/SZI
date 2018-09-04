@@ -42,7 +42,7 @@ public class Order implements Runnable {
 
             for (int i = 0; i < table.getNumberOfPeople(); i++)
             {
-                int randomMeal = ThreadLocalRandom.current().nextInt(1, 6);
+                int randomMeal = ThreadLocalRandom.current().nextInt(1, 6 + 1);
                 orderedMeals.add(menu.get(randomMeal - 1));
             }
 
