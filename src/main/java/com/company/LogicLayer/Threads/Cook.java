@@ -41,11 +41,17 @@ public class Cook implements Runnable
                 e.printStackTrace();
             }
 
-            System.out.println("Skończono zamówienie stolika nr " + table.getTableNumber());
+            System.out.println("Skończono zamówienie stolika nr " + (table.getTableNumber()+1));
             table.setOrderState(OrderStateEnum.ON_TABLE);
 
             //TODO RYSOWANIE
-
+            try {
+                mapPanel.paintOrder(table);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mapPanel.repaint();
+            mapPanel.revalidate();
 
         }
         else
