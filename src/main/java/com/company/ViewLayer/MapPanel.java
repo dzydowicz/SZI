@@ -37,6 +37,16 @@ public class MapPanel extends JPanel {
     public boolean waiterFood = false;
     public boolean waiterWine = false;
 
+    BufferedImage food1;
+    BufferedImage food2;
+    BufferedImage food3;
+    BufferedImage food4;
+
+    public boolean foodPos1 = true;
+    public boolean foodPos2 = true;
+    public boolean foodPos3 = true;
+    public boolean foodPos4 = true;
+
     BufferedImage bgImage;
     BufferedImage waiter;
     BufferedImage waiterFoodImage;
@@ -52,6 +62,7 @@ public class MapPanel extends JPanel {
     BufferedImage one, two, three, four, five;
 
     BufferedImage foodTable;
+    BufferedImage pizza;
 
 
     //int randomMap = new Random().nextInt(3) + 1;
@@ -101,6 +112,7 @@ public class MapPanel extends JPanel {
             greenBulb = ImageIO.read(new File("resources/bulb/green.png"));
 
             foodTable = ImageIO.read(new File("resources/foodTable.png"));
+            pizza = ImageIO.read(new File("resources/food_images/thumb/pizza/pizza (1).jpg"));
 
             numbers.add(ImageIO.read(new File("resources/numbers/one.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/two.png")));
@@ -234,11 +246,13 @@ public class MapPanel extends JPanel {
         int tableY;
         int randomAvatar;
 
+
         g.setColor(Color.white);
         g.setFont(new Font("Helvetica", Font.BOLD, 12));
-        g.drawString("ODBIÓR ZAMÓWIEŃ", 888, 160);
+        g.drawString("ODBIÓR ZAMÓWIEŃ", 860, 160);
         g.drawImage(foodTable, 950, 170, this);
-        g.drawImage(foodTable, 870, 170, this);
+        g.drawImage(foodTable, 880, 170, this);
+        g.drawImage(foodTable, 810, 170, this);
 
 
         for (int i = 0; i < numberOfTables; i++) {
@@ -318,6 +332,22 @@ public class MapPanel extends JPanel {
 //
 //            g.setFont(new Font("Helvetica", Font.BOLD, 12));
 //            g.drawString("Number of people: " + tables.get(i).getNumberOfPeople(), tableX, tableY - 20);
+
+            if(foodPos1){
+                g.drawImage(pizza, 800 ,200, this);
+            }
+
+            if(foodPos2){
+                g.drawImage(pizza, 850 ,200, this);
+            }
+
+            if(foodPos3){
+                g.drawImage(pizza, 900 ,200, this);
+            }
+
+            if(foodPos4){
+                g.drawImage(pizza, 950 ,200, this);
+            }
 
         }
 
