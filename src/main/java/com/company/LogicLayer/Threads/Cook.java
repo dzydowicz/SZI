@@ -55,11 +55,21 @@ public class Cook implements Runnable
 
             while(!previousOrderTaken)
             {
+                try
+                {
+                    Thread.sleep(400);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+
                 if(mapPanel.getSortedTables().get(tableIndexInSortedList-1).getOrderState().equals(OrderStateEnum.TAKEN))
                 {
                     previousOrderTaken = true;
                 }
             }
+
+            //TODO
         }
     }
 

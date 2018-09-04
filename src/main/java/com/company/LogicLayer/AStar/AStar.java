@@ -87,14 +87,6 @@ public class AStar {
         }
     }
 
-//    public void setBlocks(int[][] blocksArray) {
-//        for (int i = 0; i < blocksArray.length; i++) {
-//            int row = blocksArray[i][0];
-//            int col = blocksArray[i][1];
-//            setBlock(row, col);
-//        }
-//    }
-
     public List<Node> findPath() {
         openList.add(initialNode);
         while (!isEmpty(openList)) {

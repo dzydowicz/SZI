@@ -72,7 +72,7 @@ public class MapPanel extends JPanel {
     //    int numberOfTables = ThreadLocalRandom.current().nextInt(4, 7 + 1);
     int numberOfTables = 10;
     List<Table> tables;
-    private List<Table> sortedTables;
+    private List<Table> sortedTables = null;
     List<Coordinates> chairs = new ArrayList<>();
     //ArrayList<BufferedImage> avatars = new ArrayList<>();
     List<BufferedImage> numbers = new ArrayList<>();
