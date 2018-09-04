@@ -8,7 +8,7 @@ import java.util.List;
 
 public class OrdersService {
     public static OrdersService instance;
-    private final List<Meal> menu = new ArrayList<>(); // menu naszej restauracji
+    private static final List<Meal> menu = new ArrayList<>(); // menu naszej restauracji
     public static final String FILE_PATH = "menu.txt";
 
 
@@ -73,5 +73,9 @@ public class OrdersService {
         return menuList;
     }
 
+    public static List<Meal> getMenu()
+    {
+        return menu;
+    }
 }
 

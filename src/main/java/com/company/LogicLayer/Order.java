@@ -30,21 +30,29 @@ public class Order implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         MapPanel mapPanel = mainFrame.getMapPanel();
         List<Table> tableList = mapPanel.getTableList();
+        List<Meal> menu = OrdersService.getMenu();
+        List<Meal> orderedMeals = new ArrayList<>();
 
         try {
             int randomTime = ThreadLocalRandom.current().nextInt(100, 1000 + 1);
             Thread.sleep(randomTime);
-            tableList.get(table.getTableNumber()).setOrder(new Meal("testMeal", 10));
-            tableList.get(table.getTableNumber()).setStatus(3);
+
+            for (int i = 0; i < table.getNumberOfPeople(); i++)
+            {
+                int randomMeal = ThreadLocalRandom.current().nextInt(1, 6);
+                orderedMeals.add(menu.get(randomMeal - 1));
+            }
+
+            table.setOrder(orderedMeals);
+            table.setStatus(3);
 
             mapPanel.repaint();
             mapPanel.revalidate();
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 }

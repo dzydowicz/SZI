@@ -22,7 +22,7 @@ public class Table {
     private int numberOfPeople;
     private ArrayList<BufferedImage> avatars = new ArrayList<>();
     private ArrayList<BufferedImage> choosenAvatars = new ArrayList<>();
-    Meal meal;
+    List<Meal> meals;
 
 
     public Table(Integer table_number, int xPos, int yPos, int numberOfPeople, int status) throws IOException {
@@ -93,8 +93,13 @@ public class Table {
         return status;
     }
 
-    public void setOrder(Meal meal) {
-        this.meal = meal;
+    public void setOrder(List<Meal> meal) {
+        this.meals = meal;
+    }
+
+    public List<Meal> getMeals()
+    {
+        return meals;
     }
 
     public int getWaiterDockXPos() {

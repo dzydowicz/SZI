@@ -1,15 +1,17 @@
 package com.company.LogicLayer;
 
+import com.company.LogicLayer.AStar.AStar;
+import com.company.LogicLayer.AStar.Node;
 import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
 import com.company.LogicLayer.GeneticAlgorithm.Population;
 import com.company.LogicLayer.GeneticAlgorithm.Tour;
 import com.company.LogicLayer.GeneticAlgorithm.TourManager;
 import com.company.ViewLayer.MainFrame;
 import com.company.ViewLayer.MapPanel;
+import com.company.ViewLayer.OrdersPanel;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Waiter implements Runnable {
@@ -27,7 +29,7 @@ public class Waiter implements Runnable {
         MapPanel mapPanel = mainFrame.getMapPanel();
 
         //List<LockedArea> lockedAreas = mapPanel.getLockedAreas();
-        //List<Node> nodes = AStar.findPath(100, 100, 150, 150, lockedAreas);
+        //List<Node> nodes = AStar.findPathForWaiter(100, 100, 150, 150, lockedAreas);
 
 
         mapPanel.repaint();
@@ -80,7 +82,6 @@ public class Waiter implements Runnable {
             System.out.println("dodano stol do tour managera");
         }
 
-
         /**
          * ALGORYTM GENETYCZNY
          * SLUZY DO WYZNACZENIA NAJBARDZIEJ OPTYMALNEJ SCIEZKI POMIEDZY STOLIKAMI
@@ -122,7 +123,33 @@ public class Waiter implements Runnable {
          * potrzebujemy astarem wyznaczyć droge pokolei do kazdego stolu z poprzedniego
          */
 
+        for (Table tempTable : optimizedRouteForWaiter)
+        {
+            List<Node> routeToTable = AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(),
+                    tempTable.getWaiterDockXPos(), tempTable.getWaiterDockYPos(), mapPanel.getLockedAreas());
+            goToXYWithAStar(mapPanel, routeToTable);
 
+            for (Meal meal : tempTable.getMeals())
+            {
+                try
+                {
+                    OrdersPanel.getInstance().addNewInPreparationOrder(meal.getName(), String.valueOf(tempTable.getTableNumber() + 1));
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            try
+            {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 820, 250, mapPanel.getLockedAreas()));
     }
 
     public List<Table> getStartingPoint(List<Table> fromGeneticAlgorithm, int waiterXPos, int waiterYPos) {
@@ -162,6 +189,23 @@ public class Waiter implements Runnable {
                     mapPanel.repaint();
                     mapPanel.revalidate();
                 }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void goToXYWithAStar(MapPanel mapPanel, List<Node> path)
+    {
+        try
+        {
+            for(Node node : path)
+            {
+                Thread.sleep(100);
+                mapPanel.setWaiterXpos(node.getXPos());
+                mapPanel.setWaiterYpos(node.getYPos());
+                mapPanel.repaint();
+                mapPanel.revalidate();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

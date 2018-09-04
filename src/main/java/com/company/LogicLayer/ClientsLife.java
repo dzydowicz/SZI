@@ -17,14 +17,15 @@ public class ClientsLife implements Runnable {
     public void run() {
 
         MainFrame mainFrame = null;
+
         try {
             mainFrame = MainFrame.getInstance();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         MapPanel mapPanel = mainFrame.getMapPanel();
         List<Table> tableList = mapPanel.getTableList();
-
 
         try {
             Thread.sleep(500);
@@ -47,25 +48,17 @@ public class ClientsLife implements Runnable {
 //            }
 //        }
 //
-        for(int i =0; i < tableList.size(); i++){
-            if(tableList.get(i).getNumberOfPeople() > 0){
-                System.out.println("Uruchamiam nowy watek dla stolika numer: "+tableList.get(i).getTableNumber() );
-                threads.execute(new Order(tableList.get(i)));
-
-//                Order order = new Order();
-//                order.addMealToOrder(new Meal("randomMeal", 10));
-//                order.addMealToOrder(new Meal("secondRandomMeal", 20));
-
-//                tableList.get(i).setOrder(order);
-//                tableList.get(i).setStatus(1);
+        for (Table table : tableList)
+        {
+            if(table.getNumberOfPeople() > 0)
+            {
+                System.out.println("Uruchamiam nowy watek dla stolika numer: " + table.getTableNumber());
+                threads.execute(new Order(table));
 
                 mapPanel.repaint();
                 mapPanel.revalidate();
+
             }
         }
-
-
-
-
     }
 }

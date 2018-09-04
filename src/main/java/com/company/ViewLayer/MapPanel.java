@@ -119,7 +119,7 @@ public class MapPanel extends JPanel {
             lockedAreas.add(new LockedArea(table.getX(), table.getY(), table.getX() + 140, table.getY() + 112));
         }
 
-       // List<Node> nodes = AStar.findPath(100, 100, 110, 110, lockedAreas);
+       // List<Node> nodes = AStar.findPathForWaiter(100, 100, 110, 110, lockedAreas);
 
 
 
@@ -202,7 +202,7 @@ public class MapPanel extends JPanel {
 
 
     private void drawWaiter(Graphics2D g) {
-        g.drawImage(waiter, waiterXpos, waiterYpos, this);
+        g.drawImage(waiter, waiterXpos-29, waiterYpos-97, this);
 
     }
 

@@ -1,9 +1,15 @@
 package com.company.ViewLayer;
 
+import com.company.LogicLayer.Meal;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.io.IOException;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class OrdersPanel extends JPanel {
 
@@ -11,10 +17,13 @@ public class OrdersPanel extends JPanel {
     private JTable orderListTable;
     String [] columnNames = {"Danie", "Nr stolika", "Godzina zamówienia"};
     DefaultTableModel model;
+    private static OrdersPanel instance;
 
     private JLabel title;
 
     public OrdersPanel(String[][] list, String panelTitle, int screenWidth, int screenHeight){
+
+        instance = this;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Color.white);
@@ -35,14 +44,32 @@ public class OrdersPanel extends JPanel {
 
         this.add(scrollPane);
     }
+
+    public static OrdersPanel getInstance() throws IOException
+    {
+        return instance;
+    }
+
     public void setOrdersList(String[][] list){
         model.setDataVector(list, columnNames);
         model.fireTableDataChanged();
 
     }
-    public void addNewInPreparationOrder(String[] list)
+
+    public void addNewInPreparationOrder(String tableNumber, String mealName)
     {
-        model.addRow(list);
-        model.fireTableDataChanged();
+        String firstRowValue = (String) model.getValueAt(0, 0);
+
+        if(firstRowValue.equals(""))
+        {
+            String[][] temp = {{tableNumber, mealName, LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))}};
+            setOrdersList(temp);
+        }
+        else
+        {
+            String[] temp = {tableNumber, mealName, LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))};
+            model.addRow(temp);
+            model.fireTableDataChanged();
+        }
     }
 }

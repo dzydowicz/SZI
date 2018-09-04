@@ -81,4 +81,9 @@ public class MainFrame extends JFrame {
 
 
     public MapPanel getMapPanel(){return mapPanel;}
+
+    public JPanel getNewOrdersPanel()
+    {
+        return newOrdersPanel;
+    }
 }
