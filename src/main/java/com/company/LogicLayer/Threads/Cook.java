@@ -44,7 +44,6 @@ public class Cook implements Runnable
             System.out.println("Skończono zamówienie stolika nr " + (table.getTableNumber()+1));
             table.setOrderState(OrderStateEnum.ON_TABLE);
 
-            //TODO RYSOWANIE
             try {
                 mapPanel.paintOrder(table);
             } catch (IOException e) {
@@ -75,7 +74,15 @@ public class Cook implements Runnable
                 }
             }
 
-            //TODO
+            table.setOrderState(OrderStateEnum.ON_TABLE);
+
+            try {
+                mapPanel.paintOrder(table);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mapPanel.repaint();
+            mapPanel.revalidate();
         }
     }
 

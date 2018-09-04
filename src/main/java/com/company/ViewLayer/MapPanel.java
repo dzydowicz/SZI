@@ -54,6 +54,11 @@ public class MapPanel extends JPanel {
     public boolean foodPos3 = false;
     public boolean foodPos4 = false;
 
+    String pathFood1ToTensor;
+    String pathFood2ToTensor;
+    String pathFood3ToTensor;
+    String pathFood4ToTensor;
+
     List<BufferedImage> foodPositions;
 
     List<BufferedImage> zeroNumber = new ArrayList<>();
@@ -119,16 +124,16 @@ public class MapPanel extends JPanel {
         try {
 
             for(int x = 1 ; x <=60;x++ ){
-                zeroNumber.add(ImageIO.read(new File("resources/handwritten_numbers/0/"+"0 ("+x+").jpg")));
-                oneNumber.add(ImageIO.read(new File("resources/handwritten_numbers/1/"+"1 ("+x+").jpg")));
-                twoNumber.add(ImageIO.read(new File("resources/handwritten_numbers/2/"+"2 ("+x+").jpg")));
-                threeNumber.add(ImageIO.read(new File("resources/handwritten_numbers/3/"+"3 ("+x+").jpg")));
-                fourNumber.add(ImageIO.read(new File("resources/handwritten_numbers/4/"+"4 ("+x+").jpg")));
-                fiveNumber.add(ImageIO.read(new File("resources/handwritten_numbers/5/"+"5 ("+x+").jpg")));
-                sixNumber.add(ImageIO.read(new File("resources/handwritten_numbers/6/"+"6 ("+x+").jpg")));
-                sevenNumber.add(ImageIO.read(new File("resources/handwritten_numbers/7/"+"7 ("+x+").jpg")));
-                eightNumber.add(ImageIO.read(new File("resources/handwritten_numbers/8/"+"8 ("+x+").jpg")));
-                nineNumber.add(ImageIO.read(new File("resources/handwritten_numbers/9/"+"9 ("+x+").jpg")));
+                zeroNumber.add(ImageIO.read(new File("resources/handwritten_numbers/0/0 ("+x+").jpg")));
+                oneNumber.add(ImageIO.read(new File("resources/handwritten_numbers/1/1 ("+x+").jpg")));
+                twoNumber.add(ImageIO.read(new File("resources/handwritten_numbers/2/2 ("+x+").jpg")));
+                threeNumber.add(ImageIO.read(new File("resources/handwritten_numbers/3/3 ("+x+").jpg")));
+                fourNumber.add(ImageIO.read(new File("resources/handwritten_numbers/4/4 ("+x+").jpg")));
+                fiveNumber.add(ImageIO.read(new File("resources/handwritten_numbers/5/5 ("+x+").jpg")));
+                sixNumber.add(ImageIO.read(new File("resources/handwritten_numbers/6/6 ("+x+").jpg")));
+                sevenNumber.add(ImageIO.read(new File("resources/handwritten_numbers/7/7 ("+x+").jpg")));
+                eightNumber.add(ImageIO.read(new File("resources/handwritten_numbers/8/8 ("+x+").jpg")));
+                nineNumber.add(ImageIO.read(new File("resources/handwritten_numbers/9/9 ("+x+").jpg")));
             }
             listOfNumbers.add(zeroNumber);
             listOfNumbers.add(oneNumber);
@@ -137,10 +142,9 @@ public class MapPanel extends JPanel {
             listOfNumbers.add(fourNumber);
             listOfNumbers.add(fiveNumber);
             listOfNumbers.add(sixNumber);
+            listOfNumbers.add(sevenNumber);
             listOfNumbers.add(eightNumber);
             listOfNumbers.add(nineNumber);
-
-
 
             bgImage = ImageIO.read(new File("resources/bg.png"));
             waiter = ImageIO.read(new File("resources/alpha.png"));
@@ -179,6 +183,8 @@ public class MapPanel extends JPanel {
         for (Table table : tables) {
             lockedAreas.add(new LockedArea(table.getX(), table.getY(), table.getX() + 140, table.getY() + 112));
         }
+
+        lockedAreas.add(new LockedArea(580, 180, 1023, 260));
 
        // List<Node> nodes = AStar.findPathForWaiter(100, 100, 110, 110, lockedAreas);
 
@@ -377,7 +383,6 @@ public class MapPanel extends JPanel {
 //            g.drawString("Number of people: " + tables.get(i).getNumberOfPeople(), tableX, tableY - 20);
 
             if(foodPos1){
-                LabelImage labelImage;
 
                 g.drawImage(listOfNumbers.get(tableNumberTodraw).get(randomImageNumber), 840, 160, this);
                 g.drawImage(food1, 800 ,200, this);
@@ -433,6 +438,10 @@ public class MapPanel extends JPanel {
     }
 
     public void paintOrder(Table table) throws IOException {
+        food1 = null;
+        food2 = null;
+        food3 = null;
+        food4 = null;
 
         List<Meal> meals = table.getOrder();
         System.out.println("Meals: " + meals.stream().map(Meal::getName).collect(Collectors.toList()));
@@ -462,27 +471,101 @@ public class MapPanel extends JPanel {
                 foodPos1 = true;
                 food1 = ImageIO.read(new File(stringBuilder.toString()));
                 System.out.println("File drawed: "+ stringBuilder.toString());
+                pathFood1ToTensor = stringBuilder.toString().replace("thumb", "big");
             }
             else if(counter == 1)
             {
                 foodPos2 = true;
                 food2 = ImageIO.read(new File(stringBuilder.toString()));
                 System.out.println("File drawed: "+ stringBuilder.toString());
+                pathFood2ToTensor = stringBuilder.toString().replace("thumb", "big");
             }
             else if(counter == 2)
             {
                 foodPos3 = true;
                 food3 = ImageIO.read(new File(stringBuilder.toString()));
                 System.out.println("File drawed: "+ stringBuilder.toString());
+                pathFood3ToTensor = stringBuilder.toString().replace("thumb", "big");
             }
             else if(counter == 3)
             {
                 foodPos4 = true;
                 food4 = ImageIO.read(new File(stringBuilder.toString()));
                 System.out.println("File drawed: "+ stringBuilder.toString());
+                pathFood4ToTensor = stringBuilder.toString().replace("thumb", "big");
             }
 
             counter++;
         }
+    }
+
+    public String getPathFood1ToTensor()
+    {
+        return pathFood1ToTensor;
+    }
+
+    public String getPathFood2ToTensor()
+    {
+        return pathFood2ToTensor;
+    }
+
+    public String getPathFood3ToTensor()
+    {
+        return pathFood3ToTensor;
+    }
+
+    public String getPathFood4ToTensor()
+    {
+        return pathFood4ToTensor;
+    }
+
+    public boolean isFoodPos1()
+    {
+        return foodPos1;
+    }
+
+    public boolean isFoodPos2()
+    {
+        return foodPos2;
+    }
+
+    public boolean isFoodPos3()
+    {
+        return foodPos3;
+    }
+
+    public boolean isFoodPos4()
+    {
+        return foodPos4;
+    }
+
+    public void setFoodPos1(boolean foodPos1)
+    {
+        this.foodPos1 = foodPos1;
+    }
+
+    public void setFoodPos2(boolean foodPos2)
+    {
+        this.foodPos2 = foodPos2;
+    }
+
+    public void setFoodPos3(boolean foodPos3)
+    {
+        this.foodPos3 = foodPos3;
+    }
+
+    public void setFoodPos4(boolean foodPos4)
+    {
+        this.foodPos4 = foodPos4;
+    }
+
+    public int getTableNumberTodraw()
+    {
+        return tableNumberTodraw;
+    }
+
+    public int getRandomImageNumber()
+    {
+        return randomImageNumber;
     }
 }

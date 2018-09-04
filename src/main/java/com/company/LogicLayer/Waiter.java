@@ -7,6 +7,7 @@ import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
 import com.company.LogicLayer.GeneticAlgorithm.Population;
 import com.company.LogicLayer.GeneticAlgorithm.Tour;
 import com.company.LogicLayer.GeneticAlgorithm.TourManager;
+import com.company.TensorFlow.LabelImage;
 import com.company.ViewLayer.MainFrame;
 import com.company.ViewLayer.MapPanel;
 import com.company.ViewLayer.OrdersPanel;
@@ -16,12 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import static java.lang.Thread.sleep;
 
 public class Waiter implements Runnable {
 
     private static ExecutorService threads = Executors.newCachedThreadPool();
+    private final Logger log = Logger.getLogger(this.getClass().getName());
 
     @Override
     public void run() {
@@ -155,38 +158,148 @@ public class Waiter implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            tempTable.setStatus(2);
+
+            mapPanel.repaint();
+            mapPanel.revalidate();
         }
 
-        goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 820, 250, mapPanel.getLockedAreas()));
+        goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 580, 150, mapPanel.getLockedAreas()));
 
         threads.execute(new Kitchen(optimizedRouteForWaiter));
 
-        while(true)
-        {
-            List<Table> sortedTables = null;
+        deliverMeals(mapPanel);
+    }
 
-            do {
-                try {
+    private void deliverMeals(MapPanel mapPanel)
+    {
+        List<Table> sortedTables = null;
+
+        do
+        {
+            try
+            {
+                Thread.sleep(400);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+
+            sortedTables = mapPanel.getSortedTables();
+        } while (sortedTables == null);
+
+        do {
+            try
+            {
+                Thread.sleep(400);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }while(!sortedTables.get(0).getOrderState().equals(OrderStateEnum.ON_TABLE));
+
+        goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 890, 160, mapPanel.getLockedAreas()));
+
+        for (Table sortedTable : sortedTables)
+        {
+            if (sortedTable.getOrderState().equals(OrderStateEnum.ON_TABLE))
+            {
+                String tensorDigitLabel = LabelImage.labelDigit("resources/handwritten_numbers/"
+                        + mapPanel.getTableNumberTodraw() + "/" + mapPanel.getTableNumberTodraw() + " (" + mapPanel.getRandomImageNumber() + ").jpg");
+
+                if(!tensorDigitLabel.equalsIgnoreCase(sortedTable.getTableNumber().toString()))
+                {
+                    log.severe("Tensor recognized digit image as " + tensorDigitLabel + ", but should be " + sortedTable.getTableNumber());
+                }
+                else
+                {
+                    System.out.println("Recognized digit image correctly. Value: " + tensorDigitLabel);
+                }
+
+                if (mapPanel.isFoodPos1())
+                {
+                    String tensorLabel = LabelImage.labelFood(mapPanel.getPathFood1ToTensor());
+
+                    if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(0).getName()))
+                    {
+                        log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                    }
+                    else
+                    {
+                        System.out.println("Recognized " + tensorLabel + " correctly.");
+                    }
+                }
+
+                if (mapPanel.isFoodPos2())
+                {
+                    String tensorLabel = LabelImage.labelFood(mapPanel.getPathFood2ToTensor());
+
+                    if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(1).getName()))
+                    {
+                        log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                    }
+                    else
+                    {
+                        System.out.println("Recognized " + tensorLabel + " correctly.");
+                    }
+                }
+
+                if (mapPanel.isFoodPos3())
+                {
+                    String tensorLabel = LabelImage.labelFood(mapPanel.getPathFood3ToTensor());
+
+                    if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(2).getName()))
+                    {
+                        log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                    }
+                    else
+                    {
+                        System.out.println("Recognized " + tensorLabel + " correctly.");
+                    }
+                }
+
+                if (mapPanel.isFoodPos4())
+                {
+                    String tensorLabel = LabelImage.labelFood(mapPanel.getPathFood4ToTensor());
+
+                    if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(3).getName()))
+                    {
+                        log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                    }
+                    else
+                    {
+                        System.out.println("Recognized " + tensorLabel + " correctly.");
+                    }
+                }
+
+                mapPanel.setFoodPos1(false);
+                mapPanel.setFoodPos2(false);
+                mapPanel.setFoodPos3(false);
+                mapPanel.setFoodPos4(false);
+
+                mapPanel.repaint();
+                mapPanel.revalidate();
+
+                sortedTable.setOrderState(OrderStateEnum.TAKEN);
+
+                goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(),
+                        sortedTable.getWaiterDockXPos(), sortedTable.getWaiterDockYPos(), mapPanel.getLockedAreas()));
+
+                try
+                {
                     Thread.sleep(500);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException e)
+                {
                     e.printStackTrace();
                 }
 
-                sortedTables = mapPanel.getSortedTables();
-            } while(sortedTables == null);
+                sortedTable.setStatus(1);
 
-            for (Table sortedTable : sortedTables)
-            {
-                if(sortedTable.getOrderState().equals(OrderStateEnum.ON_TABLE))
-                {
-                    goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 890, 160, mapPanel.getLockedAreas()));
-                    //TODO PROCEDURA DLA JEDNEGO ORDERU
+                mapPanel.repaint();
+                mapPanel.revalidate();
 
-
-
-
-                    break;
-                }
+                goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 890, 160, mapPanel.getLockedAreas()));
             }
         }
     }
