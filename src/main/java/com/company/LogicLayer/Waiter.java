@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.lang.Thread.sleep;
+
 public class Waiter implements Runnable {
 
     private static ExecutorService threads = Executors.newCachedThreadPool();
@@ -45,7 +47,7 @@ public class Waiter implements Runnable {
 
         while (notAllReady) {
             try {
-                Thread.sleep(500);
+                sleep(500);
 
                 List<Table> tableList = mapPanel.getTableList();
 
@@ -149,7 +151,7 @@ public class Waiter implements Runnable {
 
             try
             {
-                Thread.sleep(500);
+                sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -161,23 +163,29 @@ public class Waiter implements Runnable {
 
         while(true)
         {
-            try
-            {
-                Thread.sleep(1000);
-            } catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
+            List<Table> sortedTables = null;
 
-            List<Table> sortedTables = mapPanel.getSortedTables();
+            do {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                sortedTables = mapPanel.getSortedTables();
+            } while(sortedTables == null);
 
             for (Table sortedTable : sortedTables)
             {
                 if(sortedTable.getOrderState().equals(OrderStateEnum.ON_TABLE))
                 {
-                    goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 888, 160, mapPanel.getLockedAreas()));
-                    break;
+                    goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 890, 160, mapPanel.getLockedAreas()));
                     //TODO PROCEDURA DLA JEDNEGO ORDERU
+
+
+
+
+                    break;
                 }
             }
         }
@@ -215,7 +223,7 @@ public class Waiter implements Runnable {
         try {
             if (mapPanel.waiterYpos <= desiredX) {
                 for (int i = mapPanel.waiterXpos; i <= desiredX; i += 10) {
-                    Thread.sleep(100);
+                    sleep(100);
                     mapPanel.setWaiterXpos(i);
                     mapPanel.repaint();
                     mapPanel.revalidate();
@@ -232,7 +240,7 @@ public class Waiter implements Runnable {
         {
             for(Node node : path)
             {
-                Thread.sleep(100);
+                sleep(100);
                 mapPanel.setWaiterXpos(node.getXPos());
                 mapPanel.setWaiterYpos(node.getYPos());
                 mapPanel.repaint();
