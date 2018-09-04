@@ -116,6 +116,7 @@ public class MapPanel extends JPanel {
 
             foodTable = ImageIO.read(new File("resources/foodTable.png"));
 
+            numbers.add(ImageIO.read(new File("resources/numbers/zero.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/one.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/two.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/three.png")));
@@ -125,7 +126,6 @@ public class MapPanel extends JPanel {
             numbers.add(ImageIO.read(new File("resources/numbers/seven.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/eight.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/nine.png")));
-            numbers.add(ImageIO.read(new File("resources/numbers/ten.png")));
 
 
 
