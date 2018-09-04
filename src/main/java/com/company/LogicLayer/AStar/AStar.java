@@ -132,10 +132,10 @@ public class AStar {
         int lowerRow = row + 10;
         if (lowerRow < getSearchArea().length) {
             if (col - 10 >= 0) {
-//                checkNode(currentNode, col - 2, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
+                checkNode(currentNode, col - 10, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
             }
             if (col + 10 < getSearchArea()[0].length) {
-//                checkNode(currentNode, col + 2, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
+                checkNode(currentNode, col + 10, lowerRow, getDiagonalCost()); // Comment this line if diagonal movements are not allowed
             }
             checkNode(currentNode, col, lowerRow, getHvCost());
         }
@@ -159,10 +159,10 @@ public class AStar {
         int upperRow = row - 10;
         if (upperRow >= 0) {
             if (col - 10 >= 0) {
-//                checkNode(currentNode, col - 2, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+                checkNode(currentNode, col - 10, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
             }
             if (col + 10 < getSearchArea()[0].length) {
-//                checkNode(currentNode, col + 2, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
+                checkNode(currentNode, col + 10, upperRow, getDiagonalCost()); // Comment this if diagonal movements are not allowed
             }
             checkNode(currentNode, col, upperRow, getHvCost());
         }

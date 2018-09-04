@@ -2,6 +2,7 @@ package com.company.LogicLayer;
 
 import com.company.LogicLayer.AStar.AStar;
 import com.company.LogicLayer.AStar.Node;
+import com.company.LogicLayer.Enums.OrderStateEnum;
 import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
 import com.company.LogicLayer.GeneticAlgorithm.Population;
 import com.company.LogicLayer.GeneticAlgorithm.Tour;
@@ -13,8 +14,13 @@ import com.company.ViewLayer.OrdersPanel;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Waiter implements Runnable {
+
+    private static ExecutorService threads = Executors.newCachedThreadPool();
+
     @Override
     public void run() {
 
@@ -129,7 +135,7 @@ public class Waiter implements Runnable {
                     tempTable.getWaiterDockXPos(), tempTable.getWaiterDockYPos(), mapPanel.getLockedAreas());
             goToXYWithAStar(mapPanel, routeToTable);
 
-            for (Meal meal : tempTable.getMeals())
+            for (Meal meal : tempTable.getOrder())
             {
                 try
                 {
@@ -150,6 +156,31 @@ public class Waiter implements Runnable {
         }
 
         goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 820, 250, mapPanel.getLockedAreas()));
+
+        threads.execute(new Kitchen(optimizedRouteForWaiter));
+
+        while(true)
+        {
+            try
+            {
+                Thread.sleep(1000);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+
+            List<Table> sortedTables = mapPanel.getSortedTables();
+
+            for (Table sortedTable : sortedTables)
+            {
+                if(sortedTable.getOrderState().equals(OrderStateEnum.ON_TABLE))
+                {
+                    goToXYWithAStar(mapPanel, AStar.findPathForWaiter(mapPanel.getWaiterXpos(), mapPanel.getWaiterYpos(), 888, 160, mapPanel.getLockedAreas()));
+                    break;
+                    //TODO PROCEDURA DLA JEDNEGO ORDERU
+                }
+            }
+        }
     }
 
     public List<Table> getStartingPoint(List<Table> fromGeneticAlgorithm, int waiterXPos, int waiterYPos) {

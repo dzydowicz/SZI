@@ -1,12 +1,14 @@
 package com.company.LogicLayer;
 
+import com.company.LogicLayer.Enums.OrderStateEnum;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Table {
@@ -22,8 +24,9 @@ public class Table {
     private int numberOfPeople;
     private ArrayList<BufferedImage> avatars = new ArrayList<>();
     private ArrayList<BufferedImage> choosenAvatars = new ArrayList<>();
-    List<Meal> meals;
-
+    private List<Meal> order;
+    private int orderTime;
+    private OrderStateEnum orderState;
 
     public Table(Integer table_number, int xPos, int yPos, int numberOfPeople, int status) throws IOException {
 
@@ -93,13 +96,16 @@ public class Table {
         return status;
     }
 
-    public void setOrder(List<Meal> meal) {
-        this.meals = meal;
+    public void setOrder(List<Meal> meals) {
+        meals.sort(Comparator.comparingInt(Meal::getTime).reversed());
+
+        this.order = meals;
+        this.orderTime = meals.iterator().next().getTime();
     }
 
-    public List<Meal> getMeals()
+    public List<Meal> getOrder()
     {
-        return meals;
+        return order;
     }
 
     public int getWaiterDockXPos() {
@@ -108,5 +114,20 @@ public class Table {
 
     public int getWaiterDockYPos() {
         return waiterDockYPos;
+    }
+
+    public int getOrderTime()
+    {
+        return orderTime;
+    }
+
+    public OrderStateEnum getOrderState()
+    {
+        return orderState;
+    }
+
+    public void setOrderState(OrderStateEnum orderState)
+    {
+        this.orderState = orderState;
     }
 }
