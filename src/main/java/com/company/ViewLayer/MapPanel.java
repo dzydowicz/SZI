@@ -51,6 +51,8 @@ public class MapPanel extends JPanel {
     BufferedImage greenBulb, yellowBulb, redBulb;
     BufferedImage one, two, three, four, five;
 
+    BufferedImage foodTable;
+
 
     //int randomMap = new Random().nextInt(3) + 1;
     public String WINE_PATH = "resources/wine1.png";
@@ -97,6 +99,8 @@ public class MapPanel extends JPanel {
             redBulb = ImageIO.read(new File("resources/bulb/red.png"));
             greenBulb = ImageIO.read(new File("resources/bulb/green.png"));
 
+            foodTable = ImageIO.read(new File("resources/foodTable.png"));
+
             numbers.add(ImageIO.read(new File("resources/numbers/one.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/two.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/three.png")));
@@ -107,6 +111,7 @@ public class MapPanel extends JPanel {
             numbers.add(ImageIO.read(new File("resources/numbers/eight.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/nine.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/ten.png")));
+
 
 
         } catch (IOException e) {
@@ -227,6 +232,13 @@ public class MapPanel extends JPanel {
         int tableX;
         int tableY;
         int randomAvatar;
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Helvetica", Font.BOLD, 12));
+        g.drawString("ODBIÓR ZAMÓWIEŃ", 888, 160);
+        g.drawImage(foodTable, 950, 170, this);
+        g.drawImage(foodTable, 870, 170, this);
+
 
         for (int i = 0; i < numberOfTables; i++) {
 //            int amountOfAvatars = avatars.size();

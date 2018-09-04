@@ -56,7 +56,7 @@ public class MainFrame extends JFrame {
 //        //utworzenie panelu z zamowieniami
         String [][] orderList = {{"", ""}};
         newOrdersPanel = new OrdersPanel(orderList, "Zamowienia:", screenWidth, screenHeight);
-        newOrdersPanel.setPreferredSize(new Dimension(380, 768));
+        newOrdersPanel.setPreferredSize(new Dimension(200, 768));
         leftPanel.add(newOrdersPanel);
 
         //utworzenie tabeli z menu
@@ -66,7 +66,7 @@ public class MainFrame extends JFrame {
             e.printStackTrace();
         }
         menuPanel = new MenuPanel(listaMenu, screenWidth, screenHeight);
-        menuPanel.setPreferredSize(new Dimension(300,768));
+        menuPanel.setPreferredSize(new Dimension(200,768));
         rightPanel.add(menuPanel);
 
         try {
