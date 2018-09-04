@@ -240,7 +240,7 @@ public class Waiter implements Runnable {
         {
             for(Node node : path)
             {
-                sleep(100);
+                sleep(20);
                 mapPanel.setWaiterXpos(node.getXPos());
                 mapPanel.setWaiterYpos(node.getYPos());
                 mapPanel.repaint();

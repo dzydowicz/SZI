@@ -8,8 +8,10 @@ import com.company.LogicLayer.GeneticAlgorithm.GeneticAlgorithm;
 import com.company.LogicLayer.GeneticAlgorithm.Population;
 import com.company.LogicLayer.GeneticAlgorithm.Tour;
 import com.company.LogicLayer.GeneticAlgorithm.TourManager;
+import com.company.LogicLayer.Meal;
 import com.company.LogicLayer.Table;
 import com.company.TensorFlow.LabelImage;
+import org.tensorflow.op.core.Imag;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class MapPanel extends JPanel {
 
@@ -42,10 +45,12 @@ public class MapPanel extends JPanel {
     BufferedImage food3;
     BufferedImage food4;
 
-    public boolean foodPos1 = true;
-    public boolean foodPos2 = true;
-    public boolean foodPos3 = true;
-    public boolean foodPos4 = true;
+    public boolean foodPos1 = false;
+    public boolean foodPos2 = false;
+    public boolean foodPos3 = false;
+    public boolean foodPos4 = false;
+
+    List<BufferedImage> foodPositions;
 
     BufferedImage bgImage;
     BufferedImage waiter;
@@ -62,12 +67,11 @@ public class MapPanel extends JPanel {
     BufferedImage one, two, three, four, five;
 
     BufferedImage foodTable;
-    BufferedImage pizza;
 
 
     //int randomMap = new Random().nextInt(3) + 1;
     public String WINE_PATH = "resources/wine1.png";
-    public String FOOD_PATH = "resources/food1.png";
+
 
     //    int numberOfTables = ThreadLocalRandom.current().nextInt(4, 7 + 1);
     int numberOfTables = 10;
@@ -105,14 +109,12 @@ public class MapPanel extends JPanel {
             kitchen = ImageIO.read(new File("resources/kitchen.png"));
             tableImage = ImageIO.read(new File("resources/table2.png"));
             wineImage = ImageIO.read(new File(WINE_PATH));
-            foodImage = ImageIO.read(new File(FOOD_PATH));
 
             yellowBulb = ImageIO.read(new File("resources/bulb/yellow.png"));
             redBulb = ImageIO.read(new File("resources/bulb/red.png"));
             greenBulb = ImageIO.read(new File("resources/bulb/green.png"));
 
             foodTable = ImageIO.read(new File("resources/foodTable.png"));
-            pizza = ImageIO.read(new File("resources/food_images/thumb/pizza/pizza (1).jpg"));
 
             numbers.add(ImageIO.read(new File("resources/numbers/one.png")));
             numbers.add(ImageIO.read(new File("resources/numbers/two.png")));
@@ -194,7 +196,7 @@ public class MapPanel extends JPanel {
         int xPos = 30;
         int yPos = 360;
         for (int i = 0; i < numberOfTables; i++) {
-            int numberOfPeople = ThreadLocalRandom.current().nextInt(0, 4 + 1);
+            int numberOfPeople = ThreadLocalRandom.current().nextInt(2, 4 + 1);
 
             if (xPos < 880) {
                 Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 2);
@@ -334,19 +336,19 @@ public class MapPanel extends JPanel {
 //            g.drawString("Number of people: " + tables.get(i).getNumberOfPeople(), tableX, tableY - 20);
 
             if(foodPos1){
-                g.drawImage(pizza, 800 ,200, this);
+                g.drawImage(food1, 800 ,200, this);
             }
 
             if(foodPos2){
-                g.drawImage(pizza, 850 ,200, this);
+                g.drawImage(food2, 850 ,200, this);
             }
 
             if(foodPos3){
-                g.drawImage(pizza, 900 ,200, this);
+                g.drawImage(food3, 900 ,200, this);
             }
 
             if(foodPos4){
-                g.drawImage(pizza, 950 ,200, this);
+                g.drawImage(food4, 950 ,200, this);
             }
 
         }
@@ -384,5 +386,54 @@ public class MapPanel extends JPanel {
     public void setSortedTables(List<Table> sortedTables)
     {
         this.sortedTables = sortedTables;
+    }
+
+    public void paintOrder(Table table) throws IOException {
+
+        List<Meal> meals = table.getOrder();
+        System.out.println("Meals: " + meals.stream().map(Meal::getName).collect(Collectors.toList()));
+
+        int counter = 0;
+
+        for (Meal meal : meals) {
+            int randomImg = ThreadLocalRandom.current().nextInt(1, 98 + 1);
+
+            System.out.println("stolik: "+table.getTableNumber());
+            System.out.println("index: "+counter);
+            System.out.println("JEDZENIE: "+ meal.getName());
+            System.out.println("wylosowana liczba: "+ randomImg);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("resources/food_images/thumb/");
+            stringBuilder.append(meal.getName());
+            stringBuilder.append("/");
+            stringBuilder.append(meal.getName());
+            stringBuilder.append(" (");
+            stringBuilder.append(randomImg);
+            stringBuilder.append(").jpg");
+
+            if(counter == 0)
+            {
+                foodPos1 = true;
+                food1 = ImageIO.read(new File(stringBuilder.toString()));
+            }
+            else if(counter == 1)
+            {
+                foodPos2 = true;
+                food2 = ImageIO.read(new File(stringBuilder.toString()));
+            }
+            else if(counter == 2)
+            {
+                foodPos3 = true;
+                food3 = ImageIO.read(new File(stringBuilder.toString()));
+            }
+            else if(counter == 3)
+            {
+                foodPos4 = true;
+                food4 = ImageIO.read(new File(stringBuilder.toString()));
+            }
+
+            counter++;
+        }
     }
 }
