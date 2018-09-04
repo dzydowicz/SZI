@@ -141,7 +141,7 @@ public class Waiter implements Runnable {
             {
                 try
                 {
-                    OrdersPanel.getInstance().addNewInPreparationOrder(meal.getName(), String.valueOf(tempTable.getTableNumber() + 1));
+                    OrdersPanel.getInstance().addNewInPreparationOrder(meal.getName(), String.valueOf(tempTable.getTableNumber()));
                 }
                 catch(IOException e)
                 {

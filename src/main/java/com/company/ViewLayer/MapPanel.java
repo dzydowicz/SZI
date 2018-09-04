@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,6 +28,9 @@ import java.util.stream.Collectors;
 public class MapPanel extends JPanel {
 
     int screenWidth, screenHeight;
+    int tableNumberTodraw;
+
+    int randomImageNumber = ThreadLocalRandom.current().nextInt(1, 59 + 1);
 
     public int waiterXpos;
     public int waiterYpos; //pozycja w px
@@ -51,6 +55,19 @@ public class MapPanel extends JPanel {
     public boolean foodPos4 = false;
 
     List<BufferedImage> foodPositions;
+
+    List<BufferedImage> zeroNumber = new ArrayList<>();
+    List<BufferedImage> oneNumber = new ArrayList<>();
+    List<BufferedImage> twoNumber = new ArrayList<>();
+    List<BufferedImage> threeNumber = new ArrayList<>();
+    List<BufferedImage> fourNumber = new ArrayList<>();
+    List<BufferedImage> fiveNumber = new ArrayList<>();
+    List<BufferedImage> sixNumber = new ArrayList<>();
+    List<BufferedImage> sevenNumber = new ArrayList<>();
+    List<BufferedImage> eightNumber = new ArrayList<>();
+    List<BufferedImage> nineNumber = new ArrayList<>();
+
+    List<List<BufferedImage>> listOfNumbers = new ArrayList<>();
 
     BufferedImage bgImage;
     BufferedImage waiter;
@@ -97,9 +114,33 @@ public class MapPanel extends JPanel {
         waiterYpos = 100;
 
         setPreferredSize(new Dimension(screenWidth, screenHeight));
-
+        randomImageNumber = ThreadLocalRandom.current().nextInt(1, 59 + 1);
 
         try {
+
+            for(int x = 1 ; x <=60;x++ ){
+                zeroNumber.add(ImageIO.read(new File("resources/handwritten_numbers/0/"+"0 ("+x+").jpg")));
+                oneNumber.add(ImageIO.read(new File("resources/handwritten_numbers/1/"+"1 ("+x+").jpg")));
+                twoNumber.add(ImageIO.read(new File("resources/handwritten_numbers/2/"+"2 ("+x+").jpg")));
+                threeNumber.add(ImageIO.read(new File("resources/handwritten_numbers/3/"+"3 ("+x+").jpg")));
+                fourNumber.add(ImageIO.read(new File("resources/handwritten_numbers/4/"+"4 ("+x+").jpg")));
+                fiveNumber.add(ImageIO.read(new File("resources/handwritten_numbers/5/"+"5 ("+x+").jpg")));
+                sixNumber.add(ImageIO.read(new File("resources/handwritten_numbers/6/"+"6 ("+x+").jpg")));
+                sevenNumber.add(ImageIO.read(new File("resources/handwritten_numbers/7/"+"7 ("+x+").jpg")));
+                eightNumber.add(ImageIO.read(new File("resources/handwritten_numbers/8/"+"8 ("+x+").jpg")));
+                nineNumber.add(ImageIO.read(new File("resources/handwritten_numbers/9/"+"9 ("+x+").jpg")));
+            }
+            listOfNumbers.add(zeroNumber);
+            listOfNumbers.add(oneNumber);
+            listOfNumbers.add(twoNumber);
+            listOfNumbers.add(threeNumber);
+            listOfNumbers.add(fourNumber);
+            listOfNumbers.add(fiveNumber);
+            listOfNumbers.add(sixNumber);
+            listOfNumbers.add(eightNumber);
+            listOfNumbers.add(nineNumber);
+
+
 
             bgImage = ImageIO.read(new File("resources/bg.png"));
             waiter = ImageIO.read(new File("resources/alpha.png"));
@@ -336,6 +377,9 @@ public class MapPanel extends JPanel {
 //            g.drawString("Number of people: " + tables.get(i).getNumberOfPeople(), tableX, tableY - 20);
 
             if(foodPos1){
+                LabelImage labelImage;
+
+                g.drawImage(listOfNumbers.get(tableNumberTodraw-1).get(randomImageNumber), 840, 160, this);
                 g.drawImage(food1, 800 ,200, this);
             }
 
@@ -414,23 +458,28 @@ public class MapPanel extends JPanel {
 
             if(counter == 0)
             {
+                tableNumberTodraw = table.getTableNumber();
                 foodPos1 = true;
                 food1 = ImageIO.read(new File(stringBuilder.toString()));
+                System.out.println("File drawed: "+ stringBuilder.toString());
             }
             else if(counter == 1)
             {
                 foodPos2 = true;
                 food2 = ImageIO.read(new File(stringBuilder.toString()));
+                System.out.println("File drawed: "+ stringBuilder.toString());
             }
             else if(counter == 2)
             {
                 foodPos3 = true;
                 food3 = ImageIO.read(new File(stringBuilder.toString()));
+                System.out.println("File drawed: "+ stringBuilder.toString());
             }
             else if(counter == 3)
             {
                 foodPos4 = true;
                 food4 = ImageIO.read(new File(stringBuilder.toString()));
+                System.out.println("File drawed: "+ stringBuilder.toString());
             }
 
             counter++;
