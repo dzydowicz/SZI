@@ -379,7 +379,7 @@ public class MapPanel extends JPanel {
             if(foodPos1){
                 LabelImage labelImage;
 
-                g.drawImage(listOfNumbers.get(tableNumberTodraw-1).get(randomImageNumber), 840, 160, this);
+                g.drawImage(listOfNumbers.get(tableNumberTodraw).get(randomImageNumber), 840, 160, this);
                 g.drawImage(food1, 800 ,200, this);
             }
 
