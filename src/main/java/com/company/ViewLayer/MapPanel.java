@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static java.lang.Thread.sleep;
+
 public class MapPanel extends JPanel {
 
     int screenWidth, screenHeight;
@@ -90,6 +92,10 @@ public class MapPanel extends JPanel {
 
     BufferedImage foodTable;
 
+    BufferedImage talkCloud;
+    boolean waiterTalking = false;
+    String waiterSay = "";
+
 
     //int randomMap = new Random().nextInt(3) + 1;
     public String WINE_PATH = "resources/wine1.png";
@@ -116,24 +122,25 @@ public class MapPanel extends JPanel {
         this.screenWidth = screenWidth;
 
         waiterXpos = 100;
-        waiterYpos = 100;
+        waiterYpos = 200;
 
         setPreferredSize(new Dimension(screenWidth, screenHeight));
         randomImageNumber = ThreadLocalRandom.current().nextInt(1, 59 + 1);
 
+        talkCloud = ImageIO.read(new File("resources/talkCloud.png"));
         try {
 
-            for(int x = 1 ; x <=60;x++ ){
-                zeroNumber.add(ImageIO.read(new File("resources/handwritten_numbers/0/0 ("+x+").jpg")));
-                oneNumber.add(ImageIO.read(new File("resources/handwritten_numbers/1/1 ("+x+").jpg")));
-                twoNumber.add(ImageIO.read(new File("resources/handwritten_numbers/2/2 ("+x+").jpg")));
-                threeNumber.add(ImageIO.read(new File("resources/handwritten_numbers/3/3 ("+x+").jpg")));
-                fourNumber.add(ImageIO.read(new File("resources/handwritten_numbers/4/4 ("+x+").jpg")));
-                fiveNumber.add(ImageIO.read(new File("resources/handwritten_numbers/5/5 ("+x+").jpg")));
-                sixNumber.add(ImageIO.read(new File("resources/handwritten_numbers/6/6 ("+x+").jpg")));
-                sevenNumber.add(ImageIO.read(new File("resources/handwritten_numbers/7/7 ("+x+").jpg")));
-                eightNumber.add(ImageIO.read(new File("resources/handwritten_numbers/8/8 ("+x+").jpg")));
-                nineNumber.add(ImageIO.read(new File("resources/handwritten_numbers/9/9 ("+x+").jpg")));
+            for (int x = 1; x <= 60; x++) {
+                zeroNumber.add(ImageIO.read(new File("resources/handwritten_numbers/0/0 (" + x + ").jpg")));
+                oneNumber.add(ImageIO.read(new File("resources/handwritten_numbers/1/1 (" + x + ").jpg")));
+                twoNumber.add(ImageIO.read(new File("resources/handwritten_numbers/2/2 (" + x + ").jpg")));
+                threeNumber.add(ImageIO.read(new File("resources/handwritten_numbers/3/3 (" + x + ").jpg")));
+                fourNumber.add(ImageIO.read(new File("resources/handwritten_numbers/4/4 (" + x + ").jpg")));
+                fiveNumber.add(ImageIO.read(new File("resources/handwritten_numbers/5/5 (" + x + ").jpg")));
+                sixNumber.add(ImageIO.read(new File("resources/handwritten_numbers/6/6 (" + x + ").jpg")));
+                sevenNumber.add(ImageIO.read(new File("resources/handwritten_numbers/7/7 (" + x + ").jpg")));
+                eightNumber.add(ImageIO.read(new File("resources/handwritten_numbers/8/8 (" + x + ").jpg")));
+                nineNumber.add(ImageIO.read(new File("resources/handwritten_numbers/9/9 (" + x + ").jpg")));
             }
             listOfNumbers.add(zeroNumber);
             listOfNumbers.add(oneNumber);
@@ -173,7 +180,6 @@ public class MapPanel extends JPanel {
             numbers.add(ImageIO.read(new File("resources/numbers/nine.png")));
 
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -186,8 +192,7 @@ public class MapPanel extends JPanel {
 
         lockedAreas.add(new LockedArea(580, 180, 1023, 260));
 
-       // List<Node> nodes = AStar.findPathForWaiter(100, 100, 110, 110, lockedAreas);
-
+        // List<Node> nodes = AStar.findPathForWaiter(100, 100, 110, 110, lockedAreas);
 
 
         System.out.println();
@@ -243,7 +248,7 @@ public class MapPanel extends JPanel {
         int xPos = 30;
         int yPos = 360;
         for (int i = 0; i < numberOfTables; i++) {
-            int numberOfPeople = ThreadLocalRandom.current().nextInt(2, 4 + 1);
+            int numberOfPeople = ThreadLocalRandom.current().nextInt(0, 4 + 1);
 
             if (xPos < 880) {
                 Table table = new Table(i, xPos, /*area offset*/yPos, numberOfPeople, 2);
@@ -269,7 +274,7 @@ public class MapPanel extends JPanel {
 
 
     private void drawWaiter(Graphics2D g) {
-        g.drawImage(waiter, waiterXpos-29, waiterYpos-97, this);
+        g.drawImage(waiter, waiterXpos - 29, waiterYpos - 97, this);
 
     }
 
@@ -356,13 +361,13 @@ public class MapPanel extends JPanel {
                 g.drawString("X", tables.get(i).getWaiterDockXPos(), tables.get(i).getWaiterDockYPos());
 
 
-                if(tables.get(i).getStatus() == 1){
+                if (tables.get(i).getStatus() == 1) {
                     g.drawImage(yellowBulb, tableX + 55, tableY - 10, this);
                 }
-                if(tables.get(i).getStatus() == 2){
+                if (tables.get(i).getStatus() == 2) {
                     g.drawImage(redBulb, tableX + 55, tableY - 10, this);
                 }
-                if(tables.get(i).getStatus() == 3){
+                if (tables.get(i).getStatus() == 3) {
                     g.drawImage(greenBulb, tableX + 55, tableY - 10, this);
                 }
 
@@ -382,22 +387,36 @@ public class MapPanel extends JPanel {
 //            g.setFont(new Font("Helvetica", Font.BOLD, 12));
 //            g.drawString("Number of people: " + tables.get(i).getNumberOfPeople(), tableX, tableY - 20);
 
-            if(foodPos1){
+            if (foodPos1) {
 
                 g.drawImage(listOfNumbers.get(tableNumberTodraw).get(randomImageNumber), 840, 160, this);
-                g.drawImage(food1, 800 ,200, this);
+                g.drawImage(food1, 780, 190, this);
             }
 
-            if(foodPos2){
-                g.drawImage(food2, 850 ,200, this);
+            if (foodPos2) {
+                g.drawImage(food2, 850, 190, this);
             }
 
-            if(foodPos3){
-                g.drawImage(food3, 900 ,200, this);
+            if (foodPos3) {
+                g.drawImage(food3, 920, 190, this);
             }
 
-            if(foodPos4){
-                g.drawImage(food4, 950 ,200, this);
+            if (foodPos4) {
+                g.drawImage(food4, 990, 190, this);
+            }
+
+            if (waiterTalking) {
+                g.drawImage(talkCloud, waiterXpos - 5, waiterYpos - 135, this);
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Helvetica", Font.BOLD, 10));
+//                g.drawString(waiterSay, waiterXpos + 5, waiterYpos - 115);
+
+                int drawY = waiterYpos -117;
+                for (String line : waiterSay.split("\n")){
+                    g.drawString(line, waiterXpos-1 , drawY );
+                    drawY += 10;
+                }
+
             }
 
         }
@@ -424,16 +443,16 @@ public class MapPanel extends JPanel {
         return lockedAreas;
     }
 
-    public List<Table> getTableList() { return tables; }
+    public List<Table> getTableList() {
+        return tables;
+    }
 
 
-    public List<Table> getSortedTables()
-    {
+    public List<Table> getSortedTables() {
         return sortedTables;
     }
 
-    public void setSortedTables(List<Table> sortedTables)
-    {
+    public void setSortedTables(List<Table> sortedTables) {
         this.sortedTables = sortedTables;
     }
 
@@ -451,10 +470,10 @@ public class MapPanel extends JPanel {
         for (Meal meal : meals) {
             int randomImg = ThreadLocalRandom.current().nextInt(1, 98 + 1);
 
-            System.out.println("stolik: "+table.getTableNumber());
-            System.out.println("index: "+counter);
-            System.out.println("JEDZENIE: "+ meal.getName());
-            System.out.println("wylosowana liczba: "+ randomImg);
+//            System.out.println("stolik: "+table.getTableNumber());
+//            System.out.println("index: "+counter);
+//            System.out.println("JEDZENIE: "+ meal.getName());
+//            System.out.println("wylosowana liczba: "+ randomImg);
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("resources/food_images/thumb/");
@@ -465,33 +484,26 @@ public class MapPanel extends JPanel {
             stringBuilder.append(randomImg);
             stringBuilder.append(").jpg");
 
-            if(counter == 0)
-            {
+            if (counter == 0) {
                 tableNumberTodraw = table.getTableNumber();
                 foodPos1 = true;
                 food1 = ImageIO.read(new File(stringBuilder.toString()));
-                System.out.println("File drawed: "+ stringBuilder.toString());
+                System.out.println("File drawed: " + stringBuilder.toString());
                 pathFood1ToTensor = stringBuilder.toString().replace("thumb", "big");
-            }
-            else if(counter == 1)
-            {
+            } else if (counter == 1) {
                 foodPos2 = true;
                 food2 = ImageIO.read(new File(stringBuilder.toString()));
-                System.out.println("File drawed: "+ stringBuilder.toString());
+                System.out.println("File drawed: " + stringBuilder.toString());
                 pathFood2ToTensor = stringBuilder.toString().replace("thumb", "big");
-            }
-            else if(counter == 2)
-            {
+            } else if (counter == 2) {
                 foodPos3 = true;
                 food3 = ImageIO.read(new File(stringBuilder.toString()));
-                System.out.println("File drawed: "+ stringBuilder.toString());
+                System.out.println("File drawed: " + stringBuilder.toString());
                 pathFood3ToTensor = stringBuilder.toString().replace("thumb", "big");
-            }
-            else if(counter == 3)
-            {
+            } else if (counter == 3) {
                 foodPos4 = true;
                 food4 = ImageIO.read(new File(stringBuilder.toString()));
-                System.out.println("File drawed: "+ stringBuilder.toString());
+                System.out.println("File drawed: " + stringBuilder.toString());
                 pathFood4ToTensor = stringBuilder.toString().replace("thumb", "big");
             }
 
@@ -499,73 +511,89 @@ public class MapPanel extends JPanel {
         }
     }
 
-    public String getPathFood1ToTensor()
-    {
+    public String getPathFood1ToTensor() {
         return pathFood1ToTensor;
     }
 
-    public String getPathFood2ToTensor()
-    {
+    public String getPathFood2ToTensor() {
         return pathFood2ToTensor;
     }
 
-    public String getPathFood3ToTensor()
-    {
+    public String getPathFood3ToTensor() {
         return pathFood3ToTensor;
     }
 
-    public String getPathFood4ToTensor()
-    {
+    public String getPathFood4ToTensor() {
         return pathFood4ToTensor;
     }
 
-    public boolean isFoodPos1()
-    {
+    public boolean isFoodPos1() {
         return foodPos1;
     }
 
-    public boolean isFoodPos2()
-    {
+    public boolean isFoodPos2() {
         return foodPos2;
     }
 
-    public boolean isFoodPos3()
-    {
+    public boolean isFoodPos3() {
         return foodPos3;
     }
 
-    public boolean isFoodPos4()
-    {
+    public boolean isFoodPos4() {
         return foodPos4;
     }
 
-    public void setFoodPos1(boolean foodPos1)
-    {
+    public void setFoodPos1(boolean foodPos1) {
         this.foodPos1 = foodPos1;
     }
 
-    public void setFoodPos2(boolean foodPos2)
-    {
+    public void setFoodPos2(boolean foodPos2) {
         this.foodPos2 = foodPos2;
     }
 
-    public void setFoodPos3(boolean foodPos3)
-    {
+    public void setFoodPos3(boolean foodPos3) {
         this.foodPos3 = foodPos3;
     }
 
-    public void setFoodPos4(boolean foodPos4)
-    {
+    public void setFoodPos4(boolean foodPos4) {
         this.foodPos4 = foodPos4;
     }
 
-    public int getTableNumberTodraw()
-    {
+    public int getTableNumberTodraw() {
         return tableNumberTodraw;
     }
 
-    public int getRandomImageNumber()
-    {
+    public int getRandomImageNumber() {
         return randomImageNumber;
     }
+
+    public void drawStringNearWaiter(String toSay) {
+
+        waiterSay = "";
+        waiterTalking = true;
+
+        char[] charArray = toSay.toCharArray();
+        for (int i = 0; i < toSay.length(); i++) {
+            waiterSay += charArray[i];
+            try {
+                sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            repaint();
+            revalidate();
+        }
+        waiterSay = toSay;
+
+    }
+
+    public void addToStringNearWaiter(String added) {
+
+    }
+
+    public void setWaiterTalking(boolean talking) {
+        waiterTalking = talking;
+    }
+
+
 }

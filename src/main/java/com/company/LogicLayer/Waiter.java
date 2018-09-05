@@ -42,7 +42,13 @@ public class Waiter implements Runnable {
         //List<LockedArea> lockedAreas = mapPanel.getLockedAreas();
         //List<Node> nodes = AStar.findPathForWaiter(100, 100, 150, 150, lockedAreas);
 
-
+        mapPanel.drawStringNearWaiter("OCZEKUJĘ \n NA \n GOTOWOŚĆ");
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mapPanel.setWaiterTalking(false);
         mapPanel.repaint();
         mapPanel.revalidate();
 
@@ -140,6 +146,14 @@ public class Waiter implements Runnable {
                     tempTable.getWaiterDockXPos(), tempTable.getWaiterDockYPos(), mapPanel.getLockedAreas());
             goToXYWithAStar(mapPanel, routeToTable);
 
+            mapPanel.drawStringNearWaiter("PRZYJMUJĘ \n ZAMÓWIENIE \n ........");
+            try {
+                sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mapPanel.setWaiterTalking(false);
+
             for (Meal meal : tempTable.getOrder())
             {
                 try
@@ -154,7 +168,7 @@ public class Waiter implements Runnable {
 
             try
             {
-                sleep(500);
+                sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -172,8 +186,18 @@ public class Waiter implements Runnable {
         deliverMeals(mapPanel);
     }
 
+
+
     private void deliverMeals(MapPanel mapPanel)
     {
+        mapPanel.drawStringNearWaiter("OCZEKUJĘ \n NA \n WYKONANIE \n ........");
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mapPanel.setWaiterTalking(false);
+
         List<Table> sortedTables = null;
 
         do
@@ -211,10 +235,24 @@ public class Waiter implements Runnable {
                 if(!tensorDigitLabel.equalsIgnoreCase(sortedTable.getTableNumber().toString()))
                 {
                     log.severe("Tensor recognized digit image as " + tensorDigitLabel + ", but should be " + sortedTable.getTableNumber());
+                    mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n CYFRĘ: \n ......" + tensorDigitLabel);
+                    try {
+                        sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mapPanel.setWaiterTalking(false);
                 }
                 else
                 {
                     System.out.println("Recognized digit image correctly. Value: " + tensorDigitLabel);
+                    mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n CYFRĘ: \n ......" + tensorDigitLabel);
+                    try {
+                        sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mapPanel.setWaiterTalking(false);
                 }
 
                 if (mapPanel.isFoodPos1())
@@ -224,10 +262,24 @@ public class Waiter implements Runnable {
                     if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(0).getName()))
                     {
                         log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
                     else
                     {
                         System.out.println("Recognized " + tensorLabel + " correctly.");
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
                 }
 
@@ -238,10 +290,24 @@ public class Waiter implements Runnable {
                     if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(1).getName()))
                     {
                         log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
                     else
                     {
                         System.out.println("Recognized " + tensorLabel + " correctly.");
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
                 }
 
@@ -252,10 +318,24 @@ public class Waiter implements Runnable {
                     if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(2).getName()))
                     {
                         log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
                     else
                     {
                         System.out.println("Recognized " + tensorLabel + " correctly.");
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
                 }
 
@@ -266,11 +346,30 @@ public class Waiter implements Runnable {
                     if (!tensorLabel.equalsIgnoreCase(sortedTable.getOrder().get(3).getName()))
                     {
                         log.severe("Tensor recognized image as " + tensorLabel + ", but should be " + sortedTable.getOrder().get(0).getName());
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
                     else
                     {
                         System.out.println("Recognized " + tensorLabel + " correctly.");
+                        mapPanel.drawStringNearWaiter("ROZPOZNAŁEM \n DANIE: \n ......" + tensorLabel);
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mapPanel.setWaiterTalking(false);
                     }
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
                 mapPanel.setFoodPos1(false);
