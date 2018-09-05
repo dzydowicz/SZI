@@ -13,6 +13,8 @@ import com.company.ViewLayer.MapPanel;
 import com.company.ViewLayer.OrdersPanel;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -96,19 +98,28 @@ public class Waiter implements Runnable {
 
         for (Table temp : activeTableList) {
             TourManager.addTable(temp);
-            System.out.println("dodano stol do tour managera");
+         //   System.out.println("dodano stol do tour managera");
         }
 
         /**
          * ALGORYTM GENETYCZNY
          * SLUZY DO WYZNACZENIA NAJBARDZIEJ OPTYMALNEJ SCIEZKI POMIEDZY STOLIKAMI
          */
-        Population population = new Population(50, true);
+        Population population = new Population(1000, true);
         System.out.println("Initial distance: " + population.getFittest().getDistance());
 
         population = GeneticAlgorithm.evolvePopulation(population);
-        for (int i = 0; i < tableList.size(); i++) {
+        for (int i = 0; i < 1000; i++) {
             population = GeneticAlgorithm.evolvePopulation(population);
+//            Tour tempTour = population.getFittest();
+//            Table tempTable;
+//            System.out.println("Fittnes: "+round( population.getTour(i).getFitness(), 4));
+//
+//            for (int y = 0; y < tempTour.tourSize(); y++) {
+//                tempTable = tempTour.getTable(y);
+//                System.out.print(" => " + tempTable.getTableNumber());
+//            }
+//            System.out.println();
         }
 
         System.out.println("Finished");
@@ -461,5 +472,13 @@ public class Waiter implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
