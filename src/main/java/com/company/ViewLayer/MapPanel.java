@@ -102,7 +102,7 @@ public class MapPanel extends JPanel {
 
 
     //    int numberOfTables = ThreadLocalRandom.current().nextInt(4, 7 + 1);
-    int numberOfTables = 10;
+    int numberOfTables = ThreadLocalRandom.current().nextInt(4, 7 + 1);
     List<Table> tables;
     private List<Table> sortedTables = null;
     List<Coordinates> chairs = new ArrayList<>();
@@ -390,19 +390,19 @@ public class MapPanel extends JPanel {
             if (foodPos1) {
 
                 g.drawImage(listOfNumbers.get(tableNumberTodraw).get(randomImageNumber), 840, 160, this);
-                g.drawImage(food1, 780, 190, this);
+                g.drawImage(food1, 760, 190, this);
             }
 
             if (foodPos2) {
-                g.drawImage(food2, 850, 190, this);
+                g.drawImage(food2, 830, 190, this);
             }
 
             if (foodPos3) {
-                g.drawImage(food3, 920, 190, this);
+                g.drawImage(food3, 900, 190, this);
             }
 
             if (foodPos4) {
-                g.drawImage(food4, 990, 190, this);
+                g.drawImage(food4, 970, 190, this);
             }
 
             if (waiterTalking) {

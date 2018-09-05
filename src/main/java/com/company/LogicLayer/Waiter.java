@@ -107,7 +107,7 @@ public class Waiter implements Runnable {
         System.out.println("Initial distance: " + population.getFittest().getDistance());
 
         population = GeneticAlgorithm.evolvePopulation(population);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < tableList.size(); i++) {
             population = GeneticAlgorithm.evolvePopulation(population);
         }
 

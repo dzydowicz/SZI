@@ -37,7 +37,7 @@ public class Order implements Runnable {
         List<Meal> orderedMeals = new ArrayList<>();
 
         try {
-            int randomTime = ThreadLocalRandom.current().nextInt(100, 1000 + 1);
+            int randomTime = ThreadLocalRandom.current().nextInt(1000, 5000 + 1);
             Thread.sleep(randomTime);
 
             for (int i = 0; i < table.getNumberOfPeople(); i++)
